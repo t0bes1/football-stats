@@ -14,3 +14,8 @@ CREDS = Credentials.from_service_account_file("creds.json")
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("football-statistics-u9y")
+
+appearances = SHEET.worksheet("appearances")
+
+data = appearances.get_all_values()
+print(data)
