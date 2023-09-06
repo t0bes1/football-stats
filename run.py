@@ -15,7 +15,7 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open("football-statistics-u9y")
 
-appearances = SHEET.worksheet("appearances")
+appear = SHEET.worksheet("appearances")
 goals = SHEET.worksheet("goals")
 form = SHEET.worksheet("form")
 team = SHEET.worksheet("team")
@@ -38,30 +38,30 @@ def get_player_list():
     return players
 
 
-def get_appearance_data(players):
+def get_appearance_data(players, game_data):
     """
     MOVE VALIDATION & CELL UPDATE INSIDE FOR LOOP
     """
-    while True:
-        print("Please enter which player feature in the last match")
-        print("Example: y\n")
 
-        appearance_data = []
+    print("Please enter which player feature in the last match")
+    print("Example: y\n")
 
-        for x in players:
-            player_appearance = input(f"Did {x} play in the game (y/n):")
-            appearance_data.append(player_appearance)
-
-        print(appearance_data)
-
-        if validate_data(appearance_data):
-            print("Data is valid!")
+    for x in players:
+        player_appearance = input(f"Did {x} play in the game (y/n):")
+        if player_appearance == "y":
+            played = player_appearance.replace("y", "1")
+        elif player_appearance == "n":
+            played = player_appearance.replace("n", "0")
+        else:
+            print("Data is not valid")
             break
+        print("Adding to the tracker ...")
+        appear.update_cell(game_data, int(players.index(x) + 2), int(played))
 
-    return appearance_data
+    # get data from ss and do validation
 
 
-def validate_data(values):
+def validate_data():
     """
     Inside the try, converts all string values into integers.
     Raises ValueError if strings cannot be converted into int,
@@ -86,7 +86,7 @@ def main():
     print(players)
     game_data = get_game_data()
     print(game_data)
-    appearance_data = get_appearance_data(players)
+    appearance_data = get_appearance_data(players, game_data)
     appearances.update_cell(game_data, 2, appearance_data)
 
     # update_worksheet(cell, appearance_data, "appearances")
