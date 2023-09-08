@@ -25,6 +25,7 @@ team = SHEET.worksheet("team")
 def get_player_list():
     players = appear.row_values(1)
     remove_blank = players.pop(0)
+    print(players)
 
     return players
 
@@ -116,12 +117,94 @@ def validate_goals_data(player_goals):
     return True
 
 
+def calculate_total_appearances(game_data, players):
+    all_appearances = appear.get_all_values()
+
+    all_appear_col = []
+    colnum = len(players) + 1
+
+    for z in range(colnum):
+        new_all_appearances = []
+        for x in all_appearances:
+            i = x[z]
+            new_all_appearances.append(i)
+
+        all_appear_col.append(new_all_appearances)
+
+    aac2 = []
+
+    for i in all_appear_col:
+        j = i[1:game_data]
+        aac2.append(j)
+
+    aac3 = aac2[1:colnum]
+
+    total_appear = []
+
+    for i in aac3:
+        q = sum([eval(k) for k in i])
+        total_appear.append(q)
+
+    print(total_appear)
+
+    return total_appear
+
+
+def calculate_total_goals(game_data, players):
+    all_goals = goals.get_all_values()
+
+    all_goals_col = []
+    colnum = len(players) + 1
+
+    for z in range(colnum):
+        new_all_goals = []
+        for x in all_goals:
+            i = x[z]
+            new_all_goals.append(i)
+
+        all_goals_col.append(new_all_goals)
+
+    agc2 = []
+
+    for i in all_goals_col:
+        j = i[1:game_data]
+        agc2.append(j)
+
+    agc3 = agc2[1:colnum]
+
+    total_goals = []
+
+    for i in agc3:
+        q = sum([eval(k) for k in i])
+        total_goals.append(q)
+
+    print(total_goals)
+
+    return total_goals
+
+
+def calculate_form(total_goals, total_appear, players):
+    form = [a / b for a, b in zip(total_goals, total_appear)]
+
+    print(form)
+
+    ranking1 = form.index(max(form))
+
+    no1_rank = players[ranking1]
+
+    return no1_rank
+
+
 def main():
     players = get_player_list()
     game_data = get_game_data()
     get_appearance_data(players, game_data)
-    os.system("cls")
     get_goals_data(players, game_data)
+    total_appear = calculate_total_appearances(game_data, players)
+    total_goals = calculate_total_goals(game_data, players)
+    no1_rank = calculate_form(total_goals, total_appear, players)
+    print("Thank you for inputting the latest macth scores.")
+    print(f"The top ranked player is {no1_rank}, please select him for the next match")
 
 
 print("Welcome to Everett Rovers Football stats reporting")
