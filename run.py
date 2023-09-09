@@ -1,9 +1,11 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
+import os
 import gspread
 from google.oauth2.service_account import Credentials
-import os
+from colorama import just_fix_windows_console
+from simple_term_menu import TerminalMenu
+
+just_fix_windows_console()
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -27,6 +29,21 @@ def get_player_list():
     remove_blank = players.pop(0)
 
     return players
+
+
+def get_game_number():
+    game_data = appear.col_values(2)
+    games = len(game_data) - 1
+
+    return games
+
+
+def top_scorer_calculation(players, total_gls):
+    player_gls = zip(players, total_gls)
+    print(type(player_gls))
+    top_scorers = sorted(list(player_gls), key=lambda x: x[1])
+    print(f"\n The top scorer is {top_scorers[-1]}")
+    main()
 
 
 def get_game_data():
@@ -118,7 +135,7 @@ def validate_goals_data(player_gls):
     return True
 
 
-def calculate_total_app(game_data, players):
+def calculate_total_app(players, games):
     """
     Accesses full appearance data from the spreadsheet
     This is manipulated into totals for each player
@@ -128,7 +145,6 @@ def calculate_total_app(game_data, players):
 
     all_app_array = []
     colnum = len(players) + 1
-    rangenum = game_data - 1
 
     for z in range(1, colnum):
         all_app_list = []
@@ -141,7 +157,7 @@ def calculate_total_app(game_data, players):
     total_app_string = []
 
     for i in all_app_array:
-        j = i[0:rangenum]
+        j = i[0:games]
         total_app_string.append(j)
 
     total_app = []
@@ -153,7 +169,7 @@ def calculate_total_app(game_data, players):
     return total_app
 
 
-def calculate_total_gls(game_data, players):
+def calculate_total_gls(players, games):
     """
     Accesses full goals data from the spreadsheet
     This is manipulated into totals for each player
@@ -163,7 +179,6 @@ def calculate_total_gls(game_data, players):
 
     all_gls_array = []
     colnum = len(players) + 1
-    rangenum = game_data - 1
 
     for z in range(1, colnum):
         all_gls_list = []
@@ -176,7 +191,7 @@ def calculate_total_gls(game_data, players):
     total_gls_string = []
 
     for i in all_gls_array:
-        j = i[0:rangenum]
+        j = i[0:games]
         total_gls_string.append(j)
 
     total_gls = []
@@ -203,22 +218,66 @@ def calculate_form(total_goals, total_appear, players):
     return no1_rank
 
 
+def menu(games, players, total_app, total_gls):
+    options = [
+        "[1] How many games have we played this season?",
+        "[2] Goals Report : Totals",
+        "[3] Who has scored the most goals this season?",
+        "[4] Which player is in the best form?",
+        "[5] Input latest game figures",
+        "[6] Quit",
+    ]
+    terminal_menu = TerminalMenu(options, title="\nMENU: Please select:")
+    menu_entry_index = terminal_menu.show()
+    print(f"\nYou have selected {options[menu_entry_index]}")
+
+    if menu_entry_index == 0:
+        print(f"\nWe have data for {games} games so far this season")
+        main()
+
+    elif menu_entry_index == 1:
+        all_gls = sum(total_gls)
+        av_gls = all_gls / games
+        print(f"\nWe have scored {all_gls} goals so far this season")
+        print(f"\nWe have done this in {games} games")
+        print(f"\nThis is {av_gls} goals per game")
+        main()
+
+    elif menu_entry_index == 2:
+        top_scorer_calculation(players, total_gls)
+        print("\nOption 3")
+
+    elif menu_entry_index == 3:
+        no1_rank = calculate_form(total_gls, total_app, players)
+        print("Thank you for inputting the latest match scores.")
+        print(f"The top ranked player is {no1_rank}")
+        print("Please select him for the next match")
+
+    elif menu_entry_index == 4:
+        game_data = get_game_data()
+        get_appearance_data(players, game_data)
+        get_goals_data(players, game_data)
+        main()
+
+    elif menu_entry_index == 5:
+        os.system("cls")
+        main()
+
+
 def main():
     players = get_player_list()
-    game_data = get_game_data()
-    get_appearance_data(players, game_data)
-    get_goals_data(players, game_data)
-    total_app = calculate_total_app(game_data, players)
-    total_gls = calculate_total_gls(game_data, players)
-    no1_rank = calculate_form(total_gls, total_app, players)
-    print("Thank you for inputting the latest match scores.")
-    print(f"The top ranked player is {no1_rank}")
-    print("Please select him for the next match")
+    games = get_game_number()
+    total_app = calculate_total_app(players, games)
+    total_gls = calculate_total_gls(players, games)
+    print(games)
+    print(players)
+    print(total_app)
+    print(total_gls)
+    menu(games, players, total_app, total_gls)
 
 
 print("\n")
 print("Welcome to Everett Rovers Football stats reporting")
-print("This program helps you input match figures")
-print("After inputting the figures, it will show you the best form player")
-print("Please include this player in the next team selection")
+print("This program helps you review team performance")
+print("You can also input the latest match figures to view up to date stats")
 main()
