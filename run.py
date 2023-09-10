@@ -1,10 +1,9 @@
 import os
+import time
 import gspread
 from google.oauth2.service_account import Credentials
-from colorama import just_fix_windows_console
+from colorama import Fore, Back, Style
 from simple_term_menu import TerminalMenu
-
-just_fix_windows_console()
 
 
 SCOPE = [
@@ -46,10 +45,13 @@ def top_scorer_calculation(players, total_gls):
     main()
 
 
-def get_game_data():
-    print("\nThe first thing we need is data")
+def get_game_data(games):
+    print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
+    print(Style.RESET_ALL)
+    print(f"\nNote that the last game inputted was Game {games}")
     print("Please enter which game has been played")
     print("Example: 6\n")
+    print(Style.RESET_ALL)
 
     raw_game_data = input("Enter the Game Number here: ")
     game_data = int(raw_game_data) + 1
@@ -87,7 +89,7 @@ def validate_appearance_data(player_app):
     try:
         if len(player_app) != 1:
             raise ValueError(
-                f"Exactly 1 value required, you provided {len(player_app)}"
+                Fore.RED + f"Exactly 1 value required, you provided {len(player_app)}"
             )
     except ValueError as e:
         print(f"Invalid data: {e}, please try again.\n")
@@ -229,7 +231,7 @@ def menu(games, players, total_app, total_gls):
     ]
     terminal_menu = TerminalMenu(options, title="\nMENU: Please select:")
     menu_entry_index = terminal_menu.show()
-    print(f"\nYou have selected {options[menu_entry_index]}")
+    print(f"\nYou have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
         print(f"\nWe have data for {games} games so far this season")
@@ -254,14 +256,23 @@ def menu(games, players, total_app, total_gls):
         print("Please select him for the next match")
 
     elif menu_entry_index == 4:
-        game_data = get_game_data()
+        game_data = get_game_data(games)
         get_appearance_data(players, game_data)
+        print(Back.BLUE + "Thanks, the new appearance data has been received")
+        print(Style.RESET_ALL)
+        time.sleep(2)
+        os.system("clear")
+        print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
         get_goals_data(players, game_data)
+        print(Back.BLUE + "Thanks, the new goal data has been received")
+        print(Style.RESET_ALL)
+        time.sleep(2)
+        os.system("clear")
         main()
 
     elif menu_entry_index == 5:
-        os.system("cls")
-        main()
+        os.system("clear")
+        quit()
 
 
 def main():
@@ -277,7 +288,9 @@ def main():
 
 
 print("\n")
-print("Welcome to Everett Rovers Football stats reporting")
+print(Back.BLUE + "Welcome to Everett Rovers Football stats reporting")
+print(Style.RESET_ALL)
 print("This program helps you review team performance")
 print("You can also input the latest match figures to view up to date stats")
+print(Style.RESET_ALL)
 main()
