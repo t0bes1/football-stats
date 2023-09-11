@@ -38,17 +38,18 @@ def get_game_number():
 
 def top_scorer_calculation(players, total_gls):
     top_scorer = total_gls.index(max(total_gls))
-    print(Back.YELLOW + f"\n The top scorer is {players[top_scorer]}")
-    print(Back.YELLOW + f"\n He has scored {max(total_gls)} this season")
+    print(Back.GREEN + f"\n The top scorer is {players[top_scorer]}")
+    print(f"\n He has scored {max(total_gls)} this season")
     print(Style.RESET_ALL)
+    print(f"But well done to all players!")
     main()
 
 
 def get_game_data(games):
     print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
     print(Style.RESET_ALL)
-    print(f"\nNote that the last game inputted was Game {games}")
-    print("Please enter which game data you would like to add")
+    print(f"\nNote that the last game data received was for Game {games}")
+    print("Please enter which game data you would like to add or adjust")
     print("Example: 6\n")
     print(Style.RESET_ALL)
 
@@ -70,7 +71,7 @@ def validate_game_data(raw_game_data, games):
     """
     try:
         if int(raw_game_data) > games + 1:
-            raise ValueError(Back.RED + f"This is not a valid game")
+            raise ValueError(Back.RED + f"a game has been missed out")
     except ValueError as e:
         print(Back.RED + f"Invalid data: {e}, please try again.\n")
         print(Style.RESET_ALL)
@@ -173,8 +174,7 @@ def get_conceded_data(game_data):
 def validate_goals_data(data_gls):
     """
     Inside the try, converts all string values into integers.
-    Raises ValueError if strings cannot be converted into int,
-    or if there aren't exactly 6 values.
+    Raises ValueError if a string is passed on a number above 9
     """
     try:
         if int(data_gls) > 9:
@@ -213,7 +213,6 @@ def calculate_total_app(players, games):
         total_app_string.append(j)
 
     total_app = []
-
     for i in total_app_string:
         q = sum([eval(k) for k in i])
         total_app.append(q)
@@ -241,13 +240,11 @@ def calculate_total_gls(players, games):
         all_gls_array.append(all_gls_list)
 
     total_gls_string = []
-
     for i in all_gls_array:
         j = i[0:games]
         total_gls_string.append(j)
 
     total_gls = []
-
     for i in total_gls_string:
         q = sum([eval(k) for k in i])
         total_gls.append(q)
@@ -255,16 +252,63 @@ def calculate_total_gls(players, games):
     return total_gls
 
 
+def calculate_total_game_gls(games):
+    """
+    Accesses full goals data from the spreadsheet
+    This is manipulated into totals for each player
+    """
+    all_gls = gls.get_all_values()
+    range = games + 1
+
+    all_game_gls = all_gls[1:range]
+    aggs = []
+    for x in all_game_gls:
+        i = x.pop(0)
+        aggs.append(x)
+
+    game_gls_list = [[int(string) for string in sublist] for sublist in aggs]
+    game_gls = []
+    for x in game_gls_list:
+        i = sum(x)
+        game_gls.append(i)
+
+    return game_gls
+
+
 def calculate_total_conceded():
     """
     Accesses full conceded data from the spreadsheet
     """
-    total_conceded = conceded.col_values(2)
-    remove_name = total_conceded.pop(0)
+    total_conceded_string = conceded.col_values(2)
+    remove_name = total_conceded_string.pop(0)
 
-    print(total_conceded)
+    total_conceded = []
+
+    for i in total_conceded_string:
+        q = sum([eval(k) for k in i])
+        total_conceded.append(q)
 
     return total_conceded
+
+
+def calculate_results(games, game_gls, total_conceded):
+    net_result = []
+    for x in game_gls:
+        i = x - total_conceded[game_gls.index(x)]
+        net_result.append(i)
+
+    print(net_result[0])
+
+    win_draw_loss = []
+    for x in net_result:
+        if x < 0:
+            win_draw_loss.append("L")
+        elif x > 0:
+            win_draw_loss.append("W")
+        else:
+            win_draw_loss.append("D")
+
+    return win_draw_loss
 
 
 def calculate_form(total_goals, total_appear, players):
@@ -279,7 +323,7 @@ def calculate_form(total_goals, total_appear, players):
     return no1_rank
 
 
-def menu(games, players, total_app, total_gls):
+def menu(games, players, total_app, total_gls, game_gls, total_conceded):
     options = [
         "[1] Games Report : Overall Performance",
         "[2] Goals Report : Overall Performance",
@@ -293,15 +337,23 @@ def menu(games, players, total_app, total_gls):
     print(f"\nYou have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
-        print(Back.YELLOW + f"\nWe have data for {games} games")
-        print("The team has had a great season!")
+        win_draw_loss = calculate_results(games, game_gls, total_conceded)
+        wins = win_draw_loss.count("W")
+        losses = win_draw_loss.count("L")
+        draws = win_draw_loss.count("D")
+        print(Back.BLUE + f"\nWe have data for {games} games")
         print(Style.RESET_ALL)
+        print(Fore.GREEN + f"We have won {wins} games")
+        print(Fore.YELLOW + f"We have drawn {draws} games")
+        print(Fore.RED + f"We have lost {losses} games")
+        print(Style.RESET_ALL)
+        print("Whatever the results, it has been a fun season!")
         main()
 
     elif menu_entry_index == 1:
         all_gls = sum(total_gls)
         av_gls = int(all_gls / games)
-        print(Back.YELLOW + f"\nWe have scored {all_gls} goals this season")
+        print(Back.GREEN + f"\nWe have scored {all_gls} goals this season")
         print(f"\nWe have done this in {games} games")
         print(f"\nThis is {av_gls} goals per game")
         print(Style.RESET_ALL)
@@ -313,9 +365,10 @@ def menu(games, players, total_app, total_gls):
 
     elif menu_entry_index == 3:
         no1_rank = calculate_form(total_gls, total_app, players)
-        print("Thank you for inputting the latest match scores.")
-        print(f"The top ranked player is {no1_rank}")
-        print("Please select him for the next match")
+        print(Back.GREEN + f"\nThe top ranked player is {no1_rank}")
+        print("\nPlease select him for the next match!")
+        print(Style.RESET_ALL)
+        main()
 
     elif menu_entry_index == 4:
         game_data = get_game_data(games)
@@ -345,15 +398,18 @@ def main():
     games = get_game_number()
     total_app = calculate_total_app(players, games)
     total_gls = calculate_total_gls(players, games)
+    game_gls = calculate_total_game_gls(games)
     total_conceded = calculate_total_conceded()
-    menu(games, players, total_app, total_gls)
+    menu(games, players, total_app, total_gls, game_gls, total_conceded)
 
 
 os.system("clear")
 print("\n")
 print(Back.BLUE + "Welcome to Everett Rovers Football team reporting")
 print(Style.RESET_ALL)
-print("This program helps you review team performance")
-print("Please also input the latest match figures to view up to date stats")
+print("There are various reports available to review our statistics")
+print("You can review games, goals, top scorer & form information")
+print(Style.DIM)
+print("[Note: you may also input new figures to ensure full game stats]")
 print(Style.RESET_ALL)
 main()
