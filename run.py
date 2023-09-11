@@ -38,10 +38,10 @@ def get_game_number():
 
 
 def top_scorer_calculation(players, total_gls):
-    player_gls = zip(players, total_gls)
-    print(type(player_gls))
-    top_scorers = sorted(list(player_gls), key=lambda x: x[1])
-    print(f"\n The top scorer is {top_scorers[-1]}")
+    top_scorer = total_gls.index(max(total_gls))
+    print(Back.YELLOW + f"\n The top scorer is {players[top_scorer]}")
+    print(Back.YELLOW + f"\n He has scored {max(total_gls)} this season")
+    print(Style.RESET_ALL)
     main()
 
 
@@ -49,21 +49,47 @@ def get_game_data(games):
     print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
     print(Style.RESET_ALL)
     print(f"\nNote that the last game inputted was Game {games}")
-    print("Please enter which game has been played")
+    print("Please enter which game data you would like to add")
     print("Example: 6\n")
     print(Style.RESET_ALL)
 
-    raw_game_data = input("Enter the Game Number here: ")
+    while True:
+        raw_game_data = input("Enter the Game Number here: ")
+        if validate_game_data(raw_game_data, games):
+            print("  Data is valid!")
+            break
     game_data = int(raw_game_data) + 1
 
     return game_data
 
 
-def get_appearance_data(players, game_data):
-    """ """
+def validate_game_data(raw_game_data, games):
+    """
+    Inside the try, converts all string values into integers.
+    Raises ValueError if strings cannot be converted into int,
+    or if there aren't exactly 6 values.
+    """
+    try:
+        if int(raw_game_data) > games + 1:
+            raise ValueError(Back.RED + f"This is not a valid game")
+    except ValueError as e:
+        print(Back.RED + f"Invalid data: {e}, please try again.\n")
+        print(Style.RESET_ALL)
+        return False
 
-    print("Please enter which player featured in the last match")
+    return True
+
+
+def get_appearance_data(players, game_data):
+    """
+    Requests the appearance data for players in the game that is being inputted
+    Returns a list of the players that played in this match
+    """
+
+    print("Please enter (y or n) which player featured in this match")
     print("Example: 'y' or 'n'")
+
+    played_game = []
 
     for x in players:
         while True:
@@ -74,10 +100,14 @@ def get_appearance_data(players, game_data):
                 break
         if player_app == "y":
             played = player_app.replace("y", "1")
+            played_game.append(x)
         elif player_app == "n":
             played = player_app.replace("n", "0")
+            gls.update_cell(game_data, int(players.index(x) + 2), 0)
         print("  Adding to the tracker ...")
         appear.update_cell(game_data, int(players.index(x) + 2), int(played))
+
+    return played_game
 
 
 def validate_appearance_data(player_app):
@@ -86,30 +116,32 @@ def validate_appearance_data(player_app):
     Raises ValueError if strings cannot be converted into int,
     or if there aren't exactly 6 values.
     """
+    data_check = "?"
     try:
-        if len(player_app) != 1:
-            raise ValueError(
-                Fore.RED + f"Exactly 1 value required, you provided {len(player_app)}"
-            )
+        if player_app == "y" or player_app == "n":
+            data_check = "OK"
+        if data_check != "OK":
+            raise ValueError(Back.RED + f"Input must be 'y' or 'n'")
     except ValueError as e:
-        print(f"Invalid data: {e}, please try again.\n")
+        print(Back.RED + f"\nInvalid data: {e}, please try again.\n")
+        print(Style.RESET_ALL)
         return False
 
     return True
 
 
-def get_goals_data(players, game_data):
+def get_goals_data(players, played_game, game_data):
     """
     The
     """
 
-    print("\nPlease enter the goals scored by the player in this match")
-    print("This should be a number and could be 0")
-    print("Example: 1 or 2\n")
+    print("Please enter the goals scored by each player in this game")
+    print("This must be a number, is 0 if they didn't score")
+    print("Example: 1 or 2")
 
-    for x in players:
+    for x in played_game:
         while True:
-            player_gls = input(f"How many goals did {x} score?:")
+            player_gls = input(f"\nHow many goals did {x} score?:")
 
             if validate_goals_data(player_gls):
                 print("  Data is valid!")
@@ -126,12 +158,11 @@ def validate_goals_data(player_gls):
     or if there aren't exactly 6 values.
     """
     try:
-        if len(player_gls) != 1:
-            raise ValueError(
-                f"Exactly 1 value required, you provided {len(player_gls)}"
-            )
+        if int(player_gls) > 9:
+            raise ValueError(Back.RED + f"This number is too high!")
     except ValueError as e:
-        print(f"Invalid data: {e}, please try again.\n")
+        print(Back.RED + f"Invalid data: {e}, please try again.\n")
+        print(Style.RESET_ALL)
         return False
 
     return True
@@ -210,11 +241,8 @@ def calculate_form(total_goals, total_appear, players):
     Uses goals and appearance data to calcuate a "form" metric for each player
     The highest value is returned, representing the best current player
     """
-
     form = [a / b for a, b in zip(total_goals, total_appear)]
-
     ranking1 = form.index(max(form))
-
     no1_rank = players[ranking1]
 
     return no1_rank
@@ -234,20 +262,23 @@ def menu(games, players, total_app, total_gls):
     print(f"\nYou have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
-        print(f"\nWe have data for {games} games so far this season")
+        print(Back.YELLOW + f"\nWe have data for {games} games")
+        print("The team has had a great season!")
+        print(Style.RESET_ALL)
         main()
 
     elif menu_entry_index == 1:
         all_gls = sum(total_gls)
-        av_gls = all_gls / games
-        print(f"\nWe have scored {all_gls} goals so far this season")
+        av_gls = int(all_gls / games)
+        print(Back.YELLOW + f"\nWe have scored {all_gls} goals this season")
         print(f"\nWe have done this in {games} games")
         print(f"\nThis is {av_gls} goals per game")
+        print(Style.RESET_ALL)
         main()
 
     elif menu_entry_index == 2:
         top_scorer_calculation(players, total_gls)
-        print("\nOption 3")
+        main()
 
     elif menu_entry_index == 3:
         no1_rank = calculate_form(total_gls, total_app, players)
@@ -257,13 +288,16 @@ def menu(games, players, total_app, total_gls):
 
     elif menu_entry_index == 4:
         game_data = get_game_data(games)
-        get_appearance_data(players, game_data)
+        print(Back.BLUE + f"\nAPPEARANCE INPUT: for Game {game_data - 1}")
+        print(Style.RESET_ALL)
+        played_game = get_appearance_data(players, game_data)
         print(Back.BLUE + "Thanks, the new appearance data has been received")
         print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
-        print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
-        get_goals_data(players, game_data)
+        print(Back.BLUE + f"\nGOALS INPUT: for Game {game_data - 1}")
+        print(Style.RESET_ALL)
+        get_goals_data(players, played_game, game_data)
         print(Back.BLUE + "Thanks, the new goal data has been received")
         print(Style.RESET_ALL)
         time.sleep(2)
@@ -280,13 +314,10 @@ def main():
     games = get_game_number()
     total_app = calculate_total_app(players, games)
     total_gls = calculate_total_gls(players, games)
-    print(games)
-    print(players)
-    print(total_app)
-    print(total_gls)
     menu(games, players, total_app, total_gls)
 
 
+os.system("clear")
 print("\n")
 print(Back.BLUE + "Welcome to Everett Rovers Football stats reporting")
 print(Style.RESET_ALL)
