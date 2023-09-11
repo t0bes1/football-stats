@@ -19,8 +19,7 @@ SHEET = GSPREAD_CLIENT.open("football-statistics-u9y")
 
 appear = SHEET.worksheet("appearances")
 gls = SHEET.worksheet("goals")
-form = SHEET.worksheet("form")
-team = SHEET.worksheet("team")
+conceded = SHEET.worksheet("conceded")
 
 
 def get_player_list():
@@ -136,7 +135,7 @@ def get_goals_data(players, played_game, game_data):
     """
 
     print("Please enter the goals scored by each player in this game")
-    print("This must be a number, is 0 if they didn't score")
+    print("This must be a number, being 0 if they didn't score")
     print("Example: 1 or 2")
 
     for x in played_game:
@@ -151,14 +150,34 @@ def get_goals_data(players, played_game, game_data):
         gls.update_cell(game_data, int(players.index(x) + 2), int(player_gls))
 
 
-def validate_goals_data(player_gls):
+def get_conceded_data(game_data):
+    """
+    The
+    """
+
+    print("Please enter the goals conceded in the game")
+    print("This must be a number, being 0 if they didn't score")
+    print("Example: 1 or 2")
+
+    while True:
+        conceded_gls = input(f"\nHow many goals did the other team score?:")
+
+        if validate_goals_data(conceded_gls):
+            print("  Data is valid!")
+            break
+
+    print("  Adding to the tracker ...")
+    conceded.update_cell(game_data, 2, int(conceded_gls))
+
+
+def validate_goals_data(data_gls):
     """
     Inside the try, converts all string values into integers.
     Raises ValueError if strings cannot be converted into int,
     or if there aren't exactly 6 values.
     """
     try:
-        if int(player_gls) > 9:
+        if int(data_gls) > 9:
             raise ValueError(Back.RED + f"This number is too high!")
     except ValueError as e:
         print(Back.RED + f"Invalid data: {e}, please try again.\n")
@@ -236,6 +255,18 @@ def calculate_total_gls(players, games):
     return total_gls
 
 
+def calculate_total_conceded():
+    """
+    Accesses full conceded data from the spreadsheet
+    """
+    total_conceded = conceded.col_values(2)
+    remove_name = total_conceded.pop(0)
+
+    print(total_conceded)
+
+    return total_conceded
+
+
 def calculate_form(total_goals, total_appear, players):
     """
     Uses goals and appearance data to calcuate a "form" metric for each player
@@ -250,8 +281,8 @@ def calculate_form(total_goals, total_appear, players):
 
 def menu(games, players, total_app, total_gls):
     options = [
-        "[1] How many games have we played this season?",
-        "[2] Goals Report : Totals",
+        "[1] Games Report : Overall Performance",
+        "[2] Goals Report : Overall Performance",
         "[3] Who has scored the most goals this season?",
         "[4] Which player is in the best form?",
         "[5] Input latest game figures",
@@ -314,14 +345,15 @@ def main():
     games = get_game_number()
     total_app = calculate_total_app(players, games)
     total_gls = calculate_total_gls(players, games)
+    total_conceded = calculate_total_conceded()
     menu(games, players, total_app, total_gls)
 
 
 os.system("clear")
 print("\n")
-print(Back.BLUE + "Welcome to Everett Rovers Football stats reporting")
+print(Back.BLUE + "Welcome to Everett Rovers Football team reporting")
 print(Style.RESET_ALL)
 print("This program helps you review team performance")
-print("You can also input the latest match figures to view up to date stats")
+print("Please also input the latest match figures to view up to date stats")
 print(Style.RESET_ALL)
 main()
