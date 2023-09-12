@@ -351,7 +351,7 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         "[5] INPUT latest game figures",
         "[6] Quit",
     ]
-    terminal_menu = TerminalMenu(options, title="\nMENU: Please select:")
+    terminal_menu = TerminalMenu(options, title="\n MENU: Please select:")
     menu_entry_index = terminal_menu.show()
     print(f"\nYou have selected: {options[menu_entry_index]}")
 
@@ -360,7 +360,8 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         wins = win_draw_loss.count("W")
         losses = win_draw_loss.count("L")
         draws = win_draw_loss.count("D")
-        print(Back.BLUE + f"\nWe have data for {games} games")
+        print(Back.BLUE + f"\nGaMES REPORT:")
+        print(f"\nWe have data for {games} games")
         print(Style.RESET_ALL)
         print(Fore.GREEN + f"We have won {wins} games")
         print(Fore.YELLOW + f"We have drawn {draws} games")
@@ -374,6 +375,8 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         all_conceded_gls = sum(total_conceded)
         av_gls = int(all_gls / games)
         gl_dif = all_gls - all_conceded_gls
+        print(Back.BLUE + f"\nGOALS REPORT:\n")
+        print()
         print(Fore.GREEN + f"\nWe have scored {all_gls} goals this season")
         print(Style.RESET_ALL)
         print(f"We have done this in {games} games")
@@ -443,11 +446,11 @@ def main():
 
 os.system("clear")
 print("\n")
-print(Back.BLUE + "Welcome to Everett Rovers Football team reporting")
+print(Back.BLUE + " Welcome to Everett Rovers Football team reporting")
 print(Style.RESET_ALL)
-print("There are various reports available to review our statistics")
-print("You can review games, goals, top scorer & form information")
+print(" There are various reports available to review our statistics")
+print(" You can review games, goals, top scorer & form information")
 print(Style.DIM)
-print("[Note: you may also input new figures to ensure full game stats]")
+print(" [Note: you may also input new figures to ensure full game stats]")
 print(Style.RESET_ALL)
 main()
