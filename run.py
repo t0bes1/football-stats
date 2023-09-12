@@ -318,15 +318,6 @@ def calculate_results(game_gls, total_conceded):
     return win_draw_loss
 
 
-def top_scorer_calculation(players, total_gls):
-    top_scorer = total_gls.index(max(total_gls))
-    print(Back.GREEN + f"\n The top scorer is {players[top_scorer]}")
-    print(f"\n He has scored {max(total_gls)} this season")
-    print(Style.RESET_ALL)
-    print(f"But well done to all players!")
-    main()
-
-
 def calculate_form(total_goals, total_appear, players):
     """
     For MENU 4: uses goals/appearance data to calcuate a player "form" metric
@@ -368,7 +359,7 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         print(Fore.YELLOW + f" We have drawn {draws} games")
         print(Fore.RED + f" We have lost {losses} games")
         print(Style.RESET_ALL)
-        print("Whatever the results, it has been a fun season!")
+        print(" Whatever the results, it has been a fun season!")
         main()
 
     elif menu_entry_index == 1:
@@ -389,15 +380,19 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
 
     elif menu_entry_index == 2:
         os.system("clear")
-        print(Back.BLUE + f"\n FORM REPORT:\n")
-        top_scorer_calculation(players, total_gls)
+        print(Back.BLUE + f"\n TOP SCORER REPORT:\n")
+        top_scorer = total_gls.index(max(total_gls))
+        print(Back.GREEN + f" The top scorer is {players[top_scorer]}")
+        print(f"\n He has scored {max(total_gls)} this season")
+        print(Style.RESET_ALL)
+        print(f" But well done to all players!")
         main()
 
     elif menu_entry_index == 3:
         no1_rank = calculate_form(total_gls, total_app, players)
         os.system("clear")
         print(Back.BLUE + f"\n FORM REPORT:\n")
-        print(Back.GREEN + f"\n The top ranked player is {no1_rank}")
+        print(Back.GREEN + f" The top ranked player is {no1_rank}")
         print("\n Please select him for the next match!")
         print(Style.RESET_ALL)
         main()
@@ -405,22 +400,22 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
     elif menu_entry_index == 4:
         os.system("clear")
         game_data = get_game_data(games)
-        print(Back.BLUE + f"\nAPPEARANCE INPUT: for Game {game_data - 1}")
+        print(Back.BLUE + f"\n APPEARANCE INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         played_game = get_appearance_data(players, game_data)
-        print(Back.BLUE + "\nThanks, new appearance data has been received")
+        print(Back.BLUE + "\n Thanks, new appearance data has been received")
         time.sleep(2)
         os.system("clear")
-        print(Back.BLUE + f"\nGOALS INPUT: for Game {game_data - 1}")
+        print(Back.BLUE + f"\n GOALS INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         get_goals_data(players, played_game, game_data)
-        print(Back.BLUE + "\nThanks, the new goal data has been received")
+        print(Back.BLUE + "\n Thanks, the new goal data has been received")
         time.sleep(2)
         os.system("clear")
-        print(Back.BLUE + f"\nGOALS AGAINST INPUT: for Game {game_data - 1}")
+        print(Back.BLUE + f"\n GOALS AGAINST INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         get_conceded_data(game_data)
-        print(Back.BLUE + "\nThanks, the new goal data has been received")
+        print(Back.BLUE + "\n Thanks, the new goal data has been received")
         time.sleep(2)
         os.system("clear")
         print(Back.BLUE + "\n WELCOME BACK. New results have been calculated.")
