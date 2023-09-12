@@ -356,7 +356,7 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
     print(f"\nYou have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
-        win_draw_loss = calculate_results(games, game_gls, total_conceded)
+        win_draw_loss = calculate_results(game_gls, total_conceded)
         wins = win_draw_loss.count("W")
         losses = win_draw_loss.count("L")
         draws = win_draw_loss.count("D")
