@@ -1,6 +1,8 @@
 
 ---
-![Football Statistics for Everett U9 Yellow team]()
+![Top Message](documentation/top-message-eu9y.png)
+
+A Program for recorded and reviewing football Statistics for the Everett Rovers U9 Yellow team
 
 My son (Seth) plays for a football team called Everett Rovers U9. I am tasked with analysing team performance and tracking our statistics. This project is aimed at automated input and analysis of this team for the purposes of providing actionable insights.
 
@@ -26,11 +28,30 @@ My son (Seth) plays for a football team called Everett Rovers U9. I am tasked wi
 
 The project uses a command line interface:
 
-![CI interface]()
+It begins with a welcome message and a menu for the user to choose
+
+![CI interface](documentation/welcome-screen-eu9y.png)
+
+The menu gives access to #1 a "Games Report, showing the teams results:
+
+![CI interface](documentation/games-report-eu9y.png)
+
+The menu also gives access to #2 a "Goals Report, showing the teams scoring & conceding record:
+
+![CI interface](documentation/goals-report-eu9y.png)
+
+A user also has access to #3 a "Top scorer" Report, showing the who has got the most goals this season:
+
+![CI interface](documentation/top-scorer-report-eu9y.png)
+
+Finally a user can also input new match data, using option #4:
+
+![CI interface](documentation/data-input-eu9y.png)
 
 The project data is stored in a google sheet:
 
-![Data]()
+![Data](documentation/gspread-eu9y.png)
+
 
 ## Technical Diagram
 
@@ -40,8 +61,8 @@ The logic and technical workflow was designed in advance (using Miro), ensuring 
 ---
 ## Technologies Used
 
-- [Pyton]() - was used to add the technical logic of the project.
-- [Google Sheets]() - was used to store the project data.
+- [Pyton](https://www.python.org/) - was used to add the technical logic of the project.
+- [Google Sheets](https://docs.google.com/spreadsheets/) - was used to store the project data.
 - [Miro](https://miro.com/templates/diagrams/) was used to sketch the technical diagram.
 - [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
 - [Git](https://git-scm.com/) was used for the version control of the website.
@@ -102,46 +123,52 @@ In order to confirm the correct functionality, responsiveness, and appearance:
 ---
 ### Bugs
 + ##### Solved bugs
-    1.  TBC
+    1.  Inially the input feature would ask for whether, this was because it used the full "players" list to cycle through
 
-    ![Bug1 Issue]()
+    ![Bug1 Issue](documentation/bug1-issue.png)
     
-    Solutions: TBC:
+    Solutions: A separate "played_game" variable was created when
     
-    ![Bug1 Solution]()
+    ![Bug1 Solution](documentation/bug1-solution.png)
     ---
 
-    2.  TBC
+    2.  When inputting the goals for those that played in the match, those that didn't had no date in the gspread. This would cause an error in the get_gls calculation, since a "" string is created in the relevant lists.
 
-    ![Bug2 Issue]()
+    ![Bug2 Issue](documentation/bug2-issue.png)
     
-    Solutions: 
+    Solutions: a separate gspread update was introduced to insert "0 goals" for all those not playing in the match
 
-    ![Bug2 Solution]()
+    ![Bug2 Solution](documentation/bug2-solution.png)
     ---
 + ##### Unsolved bugs
-    - 
+    - None
 
 + ##### Mistakes
-    - 
-
----
-## Validator testing
+    - None
 
 ---
 ## Deployment
 
-- The site was deployed to Heroku. The steps to deploy are as follows: 
-  - In the [GitHub repository](https://github.com/t0bes1/get21), navigate to the Settings tab 
-  - From the source section drop-down menu, select the **Main** Branch, then click "Save".
-  - The page will be automatically refreshed with a detailed ribbon display to indicate the successful deployment.
+- The site was deployed to Heroku, and can be accessed [here](https://everett-rovers-u9y-15b7dda34125.herokuapp.com/). 
 
-## Local Deployment
+The steps to deploy are as follows:
+  - In an [Heroku](https://dashboard.heroku.com/apps) account, navigate to the "create app option"
 
-In order to make a local copy of this project, you can clone it.
-In your IDE Terminal, type the following command to clone my repository:
+  ![Heroku deployment](documentation/heroku-deploy-1.png)
 
-- Heroku
+  - In the settings tab, update the "config variables" with the following CRED / PORTs. This includes the contents of the creds.json file (not on GiHub).
+
+  ![Heroku deployment](documentation/heroku-deploy-2.png)
+
+  - Then link the GitHub repo (https://github.com/t0bes1/football-stats) and "enable" automatic deploys:
+
+  ![Heroku deployment](documentation/heroku-deploy-3.png)
+
+  - From the source section drop-down menu, select the **Main** Branch and click "Deploy Branch":
+
+  ![Heroku deployment](documentation/heroku-deploy-4.png)
+
+  - The page will be automatically updated when commits and pushed to the GitHub repo.
 
 ---
 ## Credits
