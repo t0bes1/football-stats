@@ -23,6 +23,10 @@ conceded = SHEET.worksheet("conceded")
 
 
 def get_player_list():
+    """
+    Retrieves the list of all team players from the gspread
+    This allows the team to be increased or reduced as necessary
+    """
     players = appear.row_values(1)
     remove_blank = players.pop(0)
 
@@ -30,22 +34,21 @@ def get_player_list():
 
 
 def get_game_number():
+    """
+    Returns the number of games that have been played by looking
+    This is based on the completed data in the gspread
+    """
     game_data = appear.col_values(2)
     games = len(game_data) - 1
 
     return games
 
 
-def top_scorer_calculation(players, total_gls):
-    top_scorer = total_gls.index(max(total_gls))
-    print(Back.GREEN + f"\n The top scorer is {players[top_scorer]}")
-    print(f"\n He has scored {max(total_gls)} this season")
-    print(Style.RESET_ALL)
-    print(f"But well done to all players!")
-    main()
-
-
 def get_game_data(games):
+    """
+    Asks user for the game they would like to input data for
+    This must be the next game or a previous game (to allow adjustments)
+    """
     print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
     print(Style.RESET_ALL)
     print(f"\nNote that the last game data received was for Game {games}")
@@ -54,7 +57,7 @@ def get_game_data(games):
     print(Style.RESET_ALL)
 
     while True:
-        raw_game_data = input("Enter the Game Number here: ")
+        raw_game_data = input("Enter the Game Number here:\n")
         if validate_game_data(raw_game_data, games):
             print("  Data is valid!")
             break
@@ -65,9 +68,9 @@ def get_game_data(games):
 
 def validate_game_data(raw_game_data, games):
     """
-    Inside the try, converts all string values into integers.
-    Raises ValueError if strings cannot be converted into int,
-    or if there aren't exactly 6 values.
+    Inside the try, checks whether the game number is either the next game
+    or a prior game, allowing the user to adjuts prior figures
+    Otherwise, an error is returned
     """
     try:
         if int(raw_game_data) > games + 1:
@@ -93,7 +96,7 @@ def get_appearance_data(players, game_data):
 
     for x in players:
         while True:
-            player_app = input(f"\nDid {x} play in the game (y/n):")
+            player_app = input(f"\nDid {x} play in the game (y/n):\n")
 
             if validate_appearance_data(player_app):
                 print("  Data is valid!")
@@ -112,9 +115,8 @@ def get_appearance_data(players, game_data):
 
 def validate_appearance_data(player_app):
     """
-    Inside the try, converts all string values into integers.
-    Raises ValueError if strings cannot be converted into int,
-    or if there aren't exactly 6 values.
+    Inside the try, checks if the user has provided a valid 'y' or 'no'
+    Otherwise, an eror is provided
     """
     data_check = "?"
     try:
@@ -132,7 +134,8 @@ def validate_appearance_data(player_app):
 
 def get_goals_data(players, played_game, game_data):
     """
-    The
+    For the list of players that featured in the game, the number
+    goals scored is requested
     """
 
     print("Please enter the goals scored by each player in this game")
@@ -141,7 +144,7 @@ def get_goals_data(players, played_game, game_data):
 
     for x in played_game:
         while True:
-            player_gls = input(f"\nHow many goals did {x} score?:")
+            player_gls = input(f"\nHow many goals did {x} score?:\n")
 
             if validate_goals_data(player_gls):
                 print("  Data is valid!")
@@ -153,7 +156,7 @@ def get_goals_data(players, played_game, game_data):
 
 def get_conceded_data(game_data):
     """
-    The
+    Requests the user provides the number of goals conceded in the game
     """
 
     print("Please enter the goals conceded in the game")
@@ -161,7 +164,7 @@ def get_conceded_data(game_data):
     print("Example: 1 or 2")
 
     while True:
-        conceded_gls = input(f"\nHow many goals did the other team score?:")
+        conceded_gls = input(f"\nHow many goals did the other team score?:\n")
 
         if validate_goals_data(conceded_gls):
             print("  Data is valid!")
@@ -173,12 +176,13 @@ def get_conceded_data(game_data):
 
 def validate_goals_data(data_gls):
     """
-    Inside the try, converts all string values into integers.
-    Raises ValueError if a string is passed on a number above 9
+    Validates all goal data (scored & conceded)
+    Inside the try, attenpts to converts all string values into integers.
+    Raises ValueError if a string is passed on, or a number above 9
     """
     try:
         if int(data_gls) > 9:
-            raise ValueError(Back.RED + f"This number is too high!")
+            raise ValueError(Back.RED + f"This number is too high")
     except ValueError as e:
         print(Back.RED + f"Invalid data: {e}, please try again.\n")
         print(Style.RESET_ALL)
@@ -255,7 +259,7 @@ def calculate_total_gls(players, games):
 def calculate_total_game_gls(games):
     """
     Accesses full goals data from the spreadsheet
-    This is manipulated into totals for each player
+    This is manipulated into totals for each game
     """
     all_gls = gls.get_all_values()
     range = games + 1
@@ -278,6 +282,7 @@ def calculate_total_game_gls(games):
 def calculate_total_conceded():
     """
     Accesses full conceded data from the spreadsheet
+    This is manipulated into totals for each game
     """
     total_conceded_string = conceded.col_values(2)
     remove_name = total_conceded_string.pop(0)
@@ -291,13 +296,15 @@ def calculate_total_conceded():
     return total_conceded
 
 
-def calculate_results(games, game_gls, total_conceded):
+def calculate_results(game_gls, total_conceded):
+    """
+    For MENU1: calculates results data for
+    Compares goals scored vs goals conceded
+    """
     net_result = []
     for x in game_gls:
         i = x - total_conceded[game_gls.index(x)]
         net_result.append(i)
-
-    print(net_result[0])
 
     win_draw_loss = []
     for x in net_result:
@@ -311,9 +318,18 @@ def calculate_results(games, game_gls, total_conceded):
     return win_draw_loss
 
 
+def top_scorer_calculation(players, total_gls):
+    top_scorer = total_gls.index(max(total_gls))
+    print(Back.GREEN + f"\n The top scorer is {players[top_scorer]}")
+    print(f"\n He has scored {max(total_gls)} this season")
+    print(Style.RESET_ALL)
+    print(f"But well done to all players!")
+    main()
+
+
 def calculate_form(total_goals, total_appear, players):
     """
-    Uses goals and appearance data to calcuate a "form" metric for each player
+    For MENU 4: uses goals/appearance data to calcuate a player "form" metric
     The highest value is returned, representing the best current player
     """
     form = [a / b for a, b in zip(total_goals, total_appear)]
@@ -324,12 +340,15 @@ def calculate_form(total_goals, total_appear, players):
 
 
 def menu(games, players, total_app, total_gls, game_gls, total_conceded):
+    """
+    Main MENU: used by user to navigate the program
+    """
     options = [
         "[1] Games Report : Overall Performance",
         "[2] Goals Report : Overall Performance",
         "[3] Who has scored the most goals this season?",
         "[4] Which player is in the best form?",
-        "[5] Input latest game figures",
+        "[5] INPUT latest game figures",
         "[6] Quit",
     ]
     terminal_menu = TerminalMenu(options, title="\nMENU: Please select:")
@@ -352,10 +371,15 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
 
     elif menu_entry_index == 1:
         all_gls = sum(total_gls)
+        all_conceded_gls = sum(total_conceded)
         av_gls = int(all_gls / games)
-        print(Back.GREEN + f"\nWe have scored {all_gls} goals this season")
-        print(f"\nWe have done this in {games} games")
+        gl_dif = all_gls - all_conceded_gls
+        print(Fore.GREEN + f"\nWe have scored {all_gls} goals this season")
+        print(Style.RESET_ALL)
+        print(f"We have done this in {games} games")
         print(f"\nThis is {av_gls} goals per game")
+        print(Fore.RED + f"\nWe have conceded {all_conceded_gls} goals")
+        print(Fore.YELLOW + f"\nOur goal difference is {gl_dif} goals!")
         print(Style.RESET_ALL)
         main()
 
@@ -371,21 +395,31 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         main()
 
     elif menu_entry_index == 4:
+        os.system("clear")
         game_data = get_game_data(games)
         print(Back.BLUE + f"\nAPPEARANCE INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         played_game = get_appearance_data(players, game_data)
-        print(Back.BLUE + "Thanks, the new appearance data has been received")
+        print(Back.BLUE + "\nThanks, new appearance data has been received")
         print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
         print(Back.BLUE + f"\nGOALS INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         get_goals_data(players, played_game, game_data)
-        print(Back.BLUE + "Thanks, the new goal data has been received")
+        print(Back.BLUE + "\nThanks, the new goal data has been received")
         print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
+        print(Back.BLUE + f"\nGOALS AGAINST INPUT: for Game {game_data - 1}")
+        print(Style.RESET_ALL)
+        get_conceded_data(game_data)
+        print(Back.BLUE + "\nThanks, the new goal data has been received")
+        print(Style.RESET_ALL)
+        time.sleep(2)
+        os.system("clear")
+        print(Back.BLUE + "\nWELCOME BACK. New results have been calculated.")
+        print(Style.RESET_ALL)
         main()
 
     elif menu_entry_index == 5:
@@ -394,6 +428,10 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
 
 
 def main():
+    """
+    Main program restart
+    All base data is recalcuated to ensure up to date information provided
+    """
     players = get_player_list()
     games = get_game_number()
     total_app = calculate_total_app(players, games)
