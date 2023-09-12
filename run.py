@@ -49,7 +49,7 @@ def get_game_data(games):
     Asks user for the game they would like to input data for
     This must be the next game or a previous game (to allow adjustments)
     """
-    print(Back.BLUE + "\nGAME INPUT: Please input new game data here")
+    print(Back.BLUE + "\n GAME INPUT: Please input new game data here")
     print(Style.RESET_ALL)
     print(f"\nNote that the last game data received was for Game {games}")
     print("Please enter which game data you would like to add or adjust")
@@ -89,8 +89,8 @@ def get_appearance_data(players, game_data):
     Returns a list of the players that played in this match
     """
 
-    print("Please enter (y or n) which player featured in this match")
-    print("Example: 'y' or 'n'")
+    print(" Please enter (y or n) which player featured in this match")
+    print(" Example: 'y' or 'n'")
 
     played_game = []
 
@@ -400,22 +400,29 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
     elif menu_entry_index == 4:
         os.system("clear")
         game_data = get_game_data(games)
+        print(Back.BLUE + "\n Thanks, Game confirmed")
+        print(Style.RESET_ALL)
+        time.sleep(2)
+        os.system("clear")
         print(Back.BLUE + f"\n APPEARANCE INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         played_game = get_appearance_data(players, game_data)
         print(Back.BLUE + "\n Thanks, new appearance data has been received")
+        print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
         print(Back.BLUE + f"\n GOALS INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         get_goals_data(players, played_game, game_data)
         print(Back.BLUE + "\n Thanks, the new goal data has been received")
+        print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
         print(Back.BLUE + f"\n GOALS AGAINST INPUT: for Game {game_data - 1}")
         print(Style.RESET_ALL)
         get_conceded_data(game_data)
-        print(Back.BLUE + "\n Thanks, the new goal data has been received")
+        print(Back.BLUE + "\n Thanks, the new conceded data has been received")
+        print(Style.RESET_ALL)
         time.sleep(2)
         os.system("clear")
         print(Back.BLUE + "\n WELCOME BACK. New results have been calculated.")
