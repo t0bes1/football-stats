@@ -35,7 +35,7 @@ def get_player_list():
 
 def get_game_number():
     """
-    Returns the number of games that have been played by looking
+    Returns the number of games that have been played
     This is based on the completed data in the gspread
     """
     game_data = appear.col_values(2)
