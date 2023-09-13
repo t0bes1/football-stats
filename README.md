@@ -40,7 +40,7 @@ The menu gives access to #1 a "Games Report summary", showing the teams results:
 
 Then there is access to #2 a "Games Report Full", showing all the teams results:
 
-![CI interface](documentation/)
+![CI interface](documentation/games-report-eu9y-full.png)
 
 The menu also gives access to #3 a "Goals Report, showing the teams scoring & conceding record:
 
@@ -48,7 +48,7 @@ The menu also gives access to #3 a "Goals Report, showing the teams scoring & co
 
 A user also has access to #4 a "Top scorer" Report, showing the who has got the most goals this season:
 
-![CI interface](documentation/goals-report-eu9y.png)
+![CI interface](documentation/top-scorer-report-eu9y.png)
 
 A user also has access to #5 a "Form" Report, showing who is playing best this season
 
@@ -68,6 +68,7 @@ The project data is stored in a google sheet:
 The logic and technical workflow was designed in advance (using Miro), ensuring a sound game play flow:
 
 ![Game Logic](documentation/footall-stats-technical-flow.jpg)
+
 ---
 ## Technologies Used
 
@@ -77,7 +78,13 @@ The logic and technical workflow was designed in advance (using Miro), ensuring 
 - [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
 - [Git](https://git-scm.com/) was used for the version control of the website.
 - [GitHub](https://github.com/) was used to host the code of the website.
-- [Heroku]() was used to deploy the project.
+- [Heroku]() was used to deploy the project (using also node.js).
+
+The following Python projects were used to add additional functionality:
+- [gspread](https://docs.gspread.org/en/latest/) to access the Google sheets data store via an API
+- [simple term menu](https://pypi.org/project/simple-term-menu/0.4.4/) to allow the main program menu to be created 
+
+The "os" and "time" libraries were also used for simple UX commands
 
 ---
 ## Design
@@ -88,15 +95,13 @@ The Command Line UI was enhanced using a Python library [Colorama](https://pypi.
 
 In order to confirm the correct functionality, responsiveness, and appearance:
 
-+ The website was checked with 
++ The website was checked with Chrome, Safari & Firefox on the following devices:
 
-    - Desktop Screens: [here]()
+    - Desktop Screens: [here](documentation/desktop-designcheck.png)
 
-    - Tablet Screens: [here]()
+    - Tablet Screens: [here](documentation/tablet-designcheck.png)
 
-    - Mobile Screens (landscape mode): [here]()
-
-+ TBC
+    - Mobile Screens (landscape mode): [here](documentation/mobile-designcheck.png)
 
 ### Manual testing
 
