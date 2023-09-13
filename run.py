@@ -403,7 +403,7 @@ def calculate_form(total_gls, total_appear, players):
     print(Back.BLUE + f"\n FORM REPORT:\n")
     print(Back.GREEN + f" The top ranked player is {no1_rank}")
     print("\n Please select him as captain for the next match!\n")
-    print(Back.RED + f" The low ranked player is {no1_rank}")
+    print(Back.RED + f" The low ranked player is {no7_rank}")
     print("\n Please consider him for substitute for the next match")
     print(Style.RESET_ALL)
 
