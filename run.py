@@ -388,7 +388,7 @@ def top_scorer_report(players, total_gls):
     print(f" But well done to all players!")
 
 
-def calculate_form(total_gls, total_appear, players):
+def form_report(total_gls, total_appear, players):
     """
     For MENU 5: creates content for form report
     uses goals/appearance data to calcuate a player "form" metric
@@ -478,7 +478,7 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
         main()
 
     elif menu_entry_index == 4:
-        calculate_form(total_gls, total_app, players)
+        form_report(total_gls, total_app, players)
         main()
 
     elif menu_entry_index == 5:

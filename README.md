@@ -2,7 +2,7 @@
 ---
 ![Top Message](documentation/top-message-eu9y.png)
 
-A Program for recorded and reviewing football Statistics for the Everett Rovers U9 Yellow team:
+A Program for recording and reviewing football Statistics for the Everett Rovers U9 Yellow team:
 
 My son (Seth) plays for a football team called Everett Rovers U9. I am tasked with analysing team performance and tracking our statistics. This project is aimed at automating input and analysis of this data for the purposes of providing actionable insights and easy review of performance.
 
@@ -34,7 +34,7 @@ It begins with a welcome message and a menu for the user to choose
 
 ![CI interface](documentation/welcome-screen-eu9y.png)
 
-The menu gives access to #1 a "Games Report summary", showing the teams results:
+The menu gives access to #1 a "Games Report summary", showing the headline teams results:
 
 ![CI interface](documentation/games-report-eu9y.png)
 
@@ -54,42 +54,42 @@ A user also has access to #5 a "Form" Report, showing who is playing best this s
 
 ![CI interface](documentation/form-report-eu9y.png)
 
-Finally a user can also input new match data, using option #6:
+Finally a user can also input new match data (appearances, goals, conceded goals), using option #6:
 
 ![CI interface](documentation/data-input-eu9y.png)
 
-The project data is stored in a google sheet:
+The project data is stored in a google sheet (3 tabs):
 
 ![Data](documentation/gspread-eu9y.png)
 
 
 ## Technical Diagram
 
-The logic and technical workflow was designed in advance (using Miro), ensuring a sound game play flow:
+The logic and technical workflow was designed in advance (using Miro), ensuring a sound program user experience flow:
 
 ![Game Logic](documentation/footall-stats-technical-flow.jpg)
 
 ---
 ## Technologies Used
 
-- [Pyton](https://www.python.org/) was used to add the technical logic of the project.
-- [Google Sheets](https://docs.google.com/spreadsheets/) - was used to store the project data.
+- [Pyton](https://www.python.org/) was used to code the technical logic of the project.
+- [Google Sheets](https://docs.google.com/spreadsheets/) was used to store the project data.
 - [Miro](https://miro.com/templates/diagrams/) was used to sketch the technical diagram.
 - [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
 - [Git](https://git-scm.com/) was used for the version control of the website.
 - [GitHub](https://github.com/) was used to host the code of the website.
-- [Heroku]() was used to deploy the project (using also node.js).
+- [Heroku](https://dashboard.heroku.com/) was used to deploy the project (using also node.js).
 
 The following Python projects were used to add additional functionality:
 - [gspread](https://docs.gspread.org/en/latest/) to access the Google sheets data store via an API
 - [simple term menu](https://pypi.org/project/simple-term-menu/0.4.4/) to allow the main program menu to be created 
 
-The "os" and "time" libraries were also used for simple UX commands
+The "os" and "time" libraries were also used for adding simple UX features
 
 ---
 ## Design
 
-The Command Line UI was enhanced using a Python library [Colorama](https://pypi.org/project/colorama/)
+The Command Line UI was enhanced with various colours, using a Python library [Colorama](https://pypi.org/project/colorama/)
 
 ## Testing
 
