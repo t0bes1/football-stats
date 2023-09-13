@@ -2,9 +2,11 @@
 ---
 ![Top Message](documentation/top-message-eu9y.png)
 
-A Program for recorded and reviewing football Statistics for the Everett Rovers U9 Yellow team
+A Program for recorded and reviewing football Statistics for the Everett Rovers U9 Yellow team:
 
-My son (Seth) plays for a football team called Everett Rovers U9. I am tasked with analysing team performance and tracking our statistics. This project is aimed at automated input and analysis of this team for the purposes of providing actionable insights.
+My son (Seth) plays for a football team called Everett Rovers U9. I am tasked with analysing team performance and tracking our statistics. This project is aimed at automating input and analysis of this data for the purposes of providing actionable insights and easy review of performance.
+
+The program can be accessed [here](https://everett-rovers-u9y-15b7dda34125.herokuapp.com/) through any web browser.
 
 
 ## User Stories
@@ -19,7 +21,7 @@ My son (Seth) plays for a football team called Everett Rovers U9. I am tasked wi
 
  - As a user I want to be able to run reports on the data, so that I can access and track the team's overall performance and individual player data
 
- - As a user I want a report that shows me the best team for the next match, based on form statistics, so that I can have a data based and objective way to select the players
+ - As a user I want a report that shows the best player for the next match, based on form statistics, so that I can have a data based and objective way to select the next match captain
 
 
 ## Features
@@ -32,19 +34,27 @@ It begins with a welcome message and a menu for the user to choose
 
 ![CI interface](documentation/welcome-screen-eu9y.png)
 
-The menu gives access to #1 a "Games Report, showing the teams results:
+The menu gives access to #1 a "Games Report summary", showing the teams results:
 
 ![CI interface](documentation/games-report-eu9y.png)
 
-The menu also gives access to #2 a "Goals Report, showing the teams scoring & conceding record:
+Then there is access to #2 a "Games Report Full", showing all the teams results:
+
+![CI interface](documentation/)
+
+The menu also gives access to #3 a "Goals Report, showing the teams scoring & conceding record:
 
 ![CI interface](documentation/goals-report-eu9y.png)
 
-A user also has access to #3 a "Top scorer" Report, showing the who has got the most goals this season:
+A user also has access to #4 a "Top scorer" Report, showing the who has got the most goals this season:
 
-![CI interface](documentation/top-scorer-report-eu9y.png)
+![CI interface](documentation/goals-report-eu9y.png)
 
-Finally a user can also input new match data, using option #4:
+A user also has access to #5 a "Form" Report, showing who is playing best this season
+
+![CI interface](documentation/form-report-eu9y.png)
+
+Finally a user can also input new match data, using option #6:
 
 ![CI interface](documentation/data-input-eu9y.png)
 
@@ -61,7 +71,7 @@ The logic and technical workflow was designed in advance (using Miro), ensuring 
 ---
 ## Technologies Used
 
-- [Pyton](https://www.python.org/) - was used to add the technical logic of the project.
+- [Pyton](https://www.python.org/) was used to add the technical logic of the project.
 - [Google Sheets](https://docs.google.com/spreadsheets/) - was used to store the project data.
 - [Miro](https://miro.com/templates/diagrams/) was used to sketch the technical diagram.
 - [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
@@ -72,16 +82,11 @@ The logic and technical workflow was designed in advance (using Miro), ensuring 
 ---
 ## Design
 
-## Wireframes
-
-The basic structure of the website was created using Balsamiq:
-[here]()
+The Command Line UI was enhanced using a Python library [Colorama](https://pypi.org/project/colorama/)
 
 ## Testing
 
 In order to confirm the correct functionality, responsiveness, and appearance:
-
-+ The website was tested on the following browsers: Chrome, Firefox, Brave.
 
 + The website was checked with 
 
@@ -89,35 +94,37 @@ In order to confirm the correct functionality, responsiveness, and appearance:
 
     - Tablet Screens: [here]()
 
-    - Mobile Screens: [here]()
+    - Mobile Screens (landscape mode): [here]()
 
 + TBC
 
 ### Manual testing
 
+The program has been tested with multiple (x4) people, including children(x2) to ensure the UI is intuitive and all errors are captured. There are no inputs that result in the program crashing and no "dead ends".
+
+The below represents all paths tested by all users:
+
+
 | feature | action | expected result | tested | passed | comments |
 | --- | --- | --- | --- | --- | --- |
-| Game Play | | | | | |
-| Initial Game State | Refresh page and review set up | All cards are shown face down, a bankroll of 100 & scores at 0 | Yes | Yes | - |
-| Stake not set | No entry is made in the stake box, but "Deal" button pressed  | A message appears showing the user that they can't bet nothing and a new deal is offered | Yes | Yes | - |
-| Stake greater than Bankroll | Player chooses a stake higher than the Bankroll available  | A message appears showing the user that they can't bet this amount and a new deal is offered | Yes | Yes | - |
-| Initial Deal | Enter a valid stake and click on the "Deal" button | The player receives 2 cards, the correct total is shown on the player score and the Hit/Stand choice is offered | Yes | Yes | - |
-| Player chooses "Hit" |The "Hit" button is clicked |The player receives a third card, the correct total is calcuated and the house is dealt its cards |Yes |Yes | |
-| Player chooses "Stand" and Busts |The "Stand" button is clicked |The player does not receive a third card, the result of the game is calculated as a loss, with the house cards not shown |Yes |Yes | |
-| Player chooses "Stand" and scores 21 or lower |The "Stand" button is clicked |The player does not receive a third card, the house hand is dealt correctly, the game result is calculated correctly |Yes |Yes | |
-| Hand result is calculated correctly |The hand is concluded after "Hit" or "Stand" |The player score is shown correctly, the house score is show correctly, a win or lose message is displayed correctly |Yes |Yes | |
-| Hand outcome of a win is shown correctly |A hand is concluded |The Bankroll is updated to reflect the win, in line with the bet amount |Yes |Yes | |
-| Hand outcome of a loss is shown correctly |A hand is concluded |The Bankroll is updated to reflect the loss, in line with the bet amount |Yes |Yes | |
-| Game outcome of a win is shown correctly |The player reaches a bankroll of 200 or greater after as many hands as necessary |A congratulations message is shown, a celebration sound is played, the user is offered a restart option |Yes |Yes | |
-| Game outcome of a loss is shown correctly |The player reaches a bankroll of 0 after as many hands as necessary |A commiseration message is shown, a commiseration sound is played, the user is offered a restart option |Yes |Yes | |
-| Modal | | | | | |
-| Game rules are shown  |The "i" button is clicked | The rules of the game are shown to the player |Yes |Yes | |
-| Game rules are hidden |The screen is clicked when the modal is open | The rules of the game are no longer shown to the player and the game is playable |Yes |Yes | |
-| Sound | | | | | |
-| Sound plays  |The sound toggle is clicked on | Sounds play when hands are won or lost |Yes |Yes | |
-| Sound does not play |The sound toggle is left off  | Sounds do not play when hands are won or lost |Yes |Yes | |
-| Footer | | | | | |
-| Github icon in the footer | Click on the Github icon | The user is redirected to the Github page | Yes | Yes | - |
+| Inital program state |Clicking "Run Program" in the browers | Data processed, "Welcome" message shows & Menu appears |Yes |Yes | |
+| Menu 1: Games Summary Report |Data shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
+| Menu 2: Games Full Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
+| Menu 3: Goals Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
+| Menu 4: Top Scorer Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
+| Menu 5: Form Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
+| Menu 7: Quit |Program ends| | Yes | Yes | - |
+| Menu 6: Input data - happy path, no errors in input |Game, Appearance & Goal data processed and refreshed| | Yes | Yes | - |
+| Menu 6: Reports run again (after happy path) |All reports show updated data (per gspread) and messaging remains| | Yes | Yes | - |
+| Menu 6: Input data - game data error - string |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - game data error - number out of range |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - game data error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - appearance error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - appearance error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - goal error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - goal error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - conceded error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - conceded error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
 
 
 ---
@@ -147,6 +154,13 @@ In order to confirm the correct functionality, responsiveness, and appearance:
     - None
 
 ---
+## Validation
+
+The code for the program has been run through the "Code Instiute" Python Linter to check for errors: NONE found.
+
+![CI Linter](documentation/CI-python-linter-eu9y.png)
+
+---
 ## Deployment
 
 - The site was deployed to Heroku, and can be accessed [here](https://everett-rovers-u9y-15b7dda34125.herokuapp.com/). 
@@ -168,7 +182,7 @@ The steps to deploy are as follows:
 
   ![Heroku deployment](documentation/heroku-deploy-4.png)
 
-  - The page will be automatically updated when commits and pushed to the GitHub repo.
+  - The page will be automatically updated when commits are pushed to the GitHub repo.
 
 ---
 ## Credits

@@ -318,16 +318,130 @@ def calculate_results(game_gls, total_conceded):
     return win_draw_loss
 
 
-def calculate_form(total_goals, total_appear, players):
+def games_report_summary(games, game_gls, total_conceded):
     """
-    For MENU 4: uses goals/appearance data to calcuate a player "form" metric
+    For MENU 1: creates content for games summary report
+    """
+    win_draw_loss = calculate_results(game_gls, total_conceded)
+    wins = win_draw_loss.count("W")
+    losses = win_draw_loss.count("L")
+    draws = win_draw_loss.count("D")
+    os.system("clear")
+    print(Back.BLUE + f"\n GAMES REPORT:\n")
+    print(f" Everett Rovers U9Y have played {games} games this season")
+    print(Style.RESET_ALL)
+    print(Fore.GREEN + f" We have won {wins} games")
+    print(Fore.YELLOW + f" We have drawn {draws} games")
+    print(Fore.RED + f" We have lost {losses} games")
+    print(Style.RESET_ALL)
+    print(" Whatever the results, it has been a fun season!")
+
+
+def games_report_full(game_gls, total_conceded):
+    """
+    For MENU 2: creates content for games run down report
+    """
+    gls_string = []
+    for x in game_gls:
+        i = " Game " + str(game_gls.index(x) + 1) + ": " + str(x) + " - "
+        gls_string.append(i)
+
+    full_res = [str(a) + str(b) for a, b in zip(gls_string, total_conceded)]
+    os.system("clear")
+    print(Back.BLUE + f"\n FULL RESULTS REPORT:\n")
+    print(Style.RESET_ALL)
+    print(Fore.GREEN + f" Everett Rovers v Opponents")
+    print(Style.RESET_ALL)
+    [print(x) for x in full_res]
+
+
+def goals_report(games, total_gls, total_conceded):
+    """
+    For MENU 3: creates content for goals summary report
+    """
+    all_gls = sum(total_gls)
+    all_conceded_gls = sum(total_conceded)
+    av_gls = int(all_gls / games)
+    gl_dif = all_gls - all_conceded_gls
+    os.system("clear")
+    print(Back.BLUE + f"\n GOALS REPORT:\n")
+    print(Style.RESET_ALL)
+    print(Fore.GREEN + f" The team has scored {all_gls} goals this season")
+    print(Style.RESET_ALL)
+    print(f" We have done this in {games} games")
+    print(f" This is roughly {av_gls} goals per game; great scoring!")
+    print(Fore.RED + f"\n We have conceded {all_conceded_gls} goals")
+    print(Fore.YELLOW + f"\n Our goal difference is {gl_dif} goals!")
+    print(Style.RESET_ALL)
+
+
+def top_scorer_report(players, total_gls):
+    """
+    For MENU 4: creates content for top scorer report
+    """
+    os.system("clear")
+    print(Back.BLUE + f"\n TOP SCORER REPORT:\n")
+    top_scorer = total_gls.index(max(total_gls))
+    print(Back.GREEN + f" The top scorer is {players[top_scorer]}")
+    print(f"\n He has scored {max(total_gls)} this season")
+    print(Style.RESET_ALL)
+    print(f" But well done to all players!")
+
+
+def calculate_form(total_gls, total_appear, players):
+    """
+    For MENU 5: creates content for form report
+    uses goals/appearance data to calcuate a player "form" metric
     The highest value is returned, representing the best current player
     """
-    form = [a / b for a, b in zip(total_goals, total_appear)]
+    form = [a / b for a, b in zip(total_gls, total_appear)]
     ranking1 = form.index(max(form))
     no1_rank = players[ranking1]
+    ranking7 = form.index(min(form))
+    no7_rank = players[ranking7]
+    os.system("clear")
+    print(Back.BLUE + f"\n FORM REPORT:\n")
+    print(Back.GREEN + f" The top ranked player is {no1_rank}")
+    print("\n Please select him as captain for the next match!\n")
+    print(Back.RED + f" The low ranked player is {no1_rank}")
+    print("\n Please consider him for substitute for the next match")
+    print(Style.RESET_ALL)
 
-    return no1_rank
+
+def run_data_input(games, players):
+    """
+    For MENU 6: runs all get_data functions for inputted new game
+    Produces content to walk through process step by step
+    """
+    os.system("clear")
+    game_data = get_game_data(games)
+    print(Back.BLUE + "\n Thanks, Game confirmed")
+    print(Style.RESET_ALL)
+    time.sleep(2)
+    os.system("clear")
+    print(Back.BLUE + f"\n APPEARANCE INPUT: for Game {game_data - 1}")
+    print(Style.RESET_ALL)
+    played_game = get_appearance_data(players, game_data)
+    print(Back.BLUE + "\n Thanks, new appearance data has been received")
+    print(Style.RESET_ALL)
+    time.sleep(2)
+    os.system("clear")
+    print(Back.BLUE + f"\n GOALS INPUT: for Game {game_data - 1}")
+    print(Style.RESET_ALL)
+    get_goals_data(players, played_game, game_data)
+    print(Back.BLUE + "\n Thanks, the new goal data has been received")
+    print(Style.RESET_ALL)
+    time.sleep(2)
+    os.system("clear")
+    print(Back.BLUE + f"\n GOALS AGAINST INPUT: for Game {game_data - 1}")
+    print(Style.RESET_ALL)
+    get_conceded_data(game_data)
+    print(Back.BLUE + "\n Thanks, the new conceded data has been received")
+    print(Style.RESET_ALL)
+    time.sleep(2)
+    os.system("clear")
+    print(Back.BLUE + "\n WELCOME BACK. New results have been calculated.")
+    print(Style.RESET_ALL)
 
 
 def menu(games, players, total_app, total_gls, game_gls, total_conceded):
@@ -335,109 +449,50 @@ def menu(games, players, total_app, total_gls, game_gls, total_conceded):
     Main MENU: used by user to navigate the program
     """
     options = [
-        "[1] Games Report : Overall Performance",
-        "[2] Goals Report : Overall Performance",
-        "[3] Who has scored the most goals this season?",
-        "[4] Which player is in the best form?",
-        "[5] INPUT latest game figures",
-        "[6] Quit",
+        "[1] Games Report : Performance Summary",
+        "[2] Games Report : Full Results",
+        "[3] Goals Report : Overall Performance",
+        "[4] Who has scored the most goals this season?",
+        "[5] Which player is in the best form?",
+        "[6] INPUT latest game figures",
+        "[7] Quit",
     ]
     terminal_menu = TerminalMenu(options, title="\n MENU: Please select:")
     menu_entry_index = terminal_menu.show()
     print(f"\n You have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
-        win_draw_loss = calculate_results(game_gls, total_conceded)
-        wins = win_draw_loss.count("W")
-        losses = win_draw_loss.count("L")
-        draws = win_draw_loss.count("D")
-        os.system("clear")
-        print(Back.BLUE + f"\n GAMES REPORT:\n")
-        print(f" Everett Rovers U9Y have played {games} games this season")
-        print(Style.RESET_ALL)
-        print(Fore.GREEN + f" We have won {wins} games")
-        print(Fore.YELLOW + f" We have drawn {draws} games")
-        print(Fore.RED + f" We have lost {losses} games")
-        print(Style.RESET_ALL)
-        print(" Whatever the results, it has been a fun season!")
+        games_report_summary(games, game_gls, total_conceded)
         main()
 
     elif menu_entry_index == 1:
-        all_gls = sum(total_gls)
-        all_conceded_gls = sum(total_conceded)
-        av_gls = int(all_gls / games)
-        gl_dif = all_gls - all_conceded_gls
-        os.system("clear")
-        print(Back.BLUE + f"\n GOALS REPORT:\n")
-        print(Style.RESET_ALL)
-        print(Fore.GREEN + f" The team has scored {all_gls} goals this season")
-        print(Style.RESET_ALL)
-        print(f" We have done this in {games} games")
-        print(f" This is roughly {av_gls} goals per game; great scoring!")
-        print(Fore.RED + f"\n We have conceded {all_conceded_gls} goals")
-        print(Fore.YELLOW + f"\n Our goal difference is {gl_dif} goals!")
-        print(Style.RESET_ALL)
+        games_report_full(game_gls, total_conceded)
         main()
 
     elif menu_entry_index == 2:
-        os.system("clear")
-        print(Back.BLUE + f"\n TOP SCORER REPORT:\n")
-        top_scorer = total_gls.index(max(total_gls))
-        print(Back.GREEN + f" The top scorer is {players[top_scorer]}")
-        print(f"\n He has scored {max(total_gls)} this season")
-        print(Style.RESET_ALL)
-        print(f" But well done to all players!")
+        goals_report(games, total_gls, total_conceded)
         main()
 
     elif menu_entry_index == 3:
-        no1_rank = calculate_form(total_gls, total_app, players)
-        os.system("clear")
-        print(Back.BLUE + f"\n FORM REPORT:\n")
-        print(Back.GREEN + f" The top ranked player is {no1_rank}")
-        print("\n Please select him for the next match!")
-        print(Style.RESET_ALL)
+        top_scorer_report(players, total_gls)
         main()
 
     elif menu_entry_index == 4:
-        os.system("clear")
-        game_data = get_game_data(games)
-        print(Back.BLUE + "\n Thanks, Game confirmed")
-        print(Style.RESET_ALL)
-        time.sleep(2)
-        os.system("clear")
-        print(Back.BLUE + f"\n APPEARANCE INPUT: for Game {game_data - 1}")
-        print(Style.RESET_ALL)
-        played_game = get_appearance_data(players, game_data)
-        print(Back.BLUE + "\n Thanks, new appearance data has been received")
-        print(Style.RESET_ALL)
-        time.sleep(2)
-        os.system("clear")
-        print(Back.BLUE + f"\n GOALS INPUT: for Game {game_data - 1}")
-        print(Style.RESET_ALL)
-        get_goals_data(players, played_game, game_data)
-        print(Back.BLUE + "\n Thanks, the new goal data has been received")
-        print(Style.RESET_ALL)
-        time.sleep(2)
-        os.system("clear")
-        print(Back.BLUE + f"\n GOALS AGAINST INPUT: for Game {game_data - 1}")
-        print(Style.RESET_ALL)
-        get_conceded_data(game_data)
-        print(Back.BLUE + "\n Thanks, the new conceded data has been received")
-        print(Style.RESET_ALL)
-        time.sleep(2)
-        os.system("clear")
-        print(Back.BLUE + "\n WELCOME BACK. New results have been calculated.")
-        print(Style.RESET_ALL)
+        calculate_form(total_gls, total_app, players)
         main()
 
     elif menu_entry_index == 5:
+        run_data_input(games, players)
+        main()
+
+    elif menu_entry_index == 6:
         os.system("clear")
         quit()
 
 
 def main():
     """
-    Main program restart
+    Main program begin/restart
     All base data is recalcuated to ensure up to date information provided
     """
     players = get_player_list()
