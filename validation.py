@@ -1,5 +1,7 @@
 from colorama import Fore, Back, Style
 
+R = Style.RESET_ALL
+
 
 def validate_game_data(raw_game_data, games):
     """
@@ -13,11 +15,7 @@ def validate_game_data(raw_game_data, games):
         elif int(raw_game_data) < 1:
             raise ValueError(Back.RED + f"game number must be more than 0")
     except ValueError as e:
-        print(
-            Back.RED
-            + f"""\nInvalid data: {e},
-            please try again.\n{Style.RESET_ALL}"""
-        )
+        print(Back.RED + f"""\nInvalid data: {e}, please try again.\n{R}""")
         return False
 
     return True
@@ -38,7 +36,7 @@ def validate_appearance_data(player_app):
         print(
             Back.RED
             + f"""\nInvalid data: {e},
-            please try again.\n{Style.RESET_ALL}"""
+            please try again.\n{R}"""
         )
         return False
 
@@ -55,18 +53,14 @@ def validate_goals_data(data_gls):
         if int(data_gls) > 5:
             print(
                 Back.YELLOW
-                + f"""This number "{data_gls}" is possible but very high,
-                please re-enter figures later if an error has been made"""
+                + f"""This number "{data_gls}" is possible but very high
+                \nPlease adjust figures later if an error has been made\n{R}"""
             )
             return True
         elif int(data_gls) < 0:
             raise ValueError(Back.RED + f"Goals must be a positive number")
     except ValueError as e:
-        print(
-            Back.RED
-            + f"""\nInvalid data: {e},
-            please try again.\n{Style.RESET_ALL}"""
-        )
+        print(Back.RED + f"""\nInvalid data: {e},please try again.\n{R}""")
         return False
 
     return True

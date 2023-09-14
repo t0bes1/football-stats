@@ -17,6 +17,10 @@ SHEET = GSPREAD_CLIENT.open("football-statistics-u9y")
 app = SHEET.worksheet("appearances")
 gls = SHEET.worksheet("goals")
 conceded = SHEET.worksheet("conceded")
+R = Style.RESET_ALL
+FR = Fore.RED
+FY = Fore.YELLOW
+FG = Fore.GREEN
 
 
 def get_player_list():
@@ -48,11 +52,13 @@ def get_game_data(games):
     """
     print(
         Back.BLUE
-        + f"""\n GAME INPUT: Please input game data here {Style.RESET_ALL}
+        + f"""\n GAME INPUT: ADD OR EDIT game data here {R}
     \nYou may add a new game or adjust the figures from previous games
+    ------------------------------------------------------------
     \nNote that the last game data received was for Game {games}
-    \nIf you'd like to enter the next game, please input {games + 1}
-    \nIf you'd like to adjust a previous game, please input 1-{games}"""
+    \nIf you'd like to {FY}enter the next game{R}, please input {games + 1}
+    \nIf you'd like to {FR}adjust a previous game{R}, please input 1-{games}\n
+    ------------------------------------------------------------"""
     )
 
     while True:
@@ -72,20 +78,16 @@ def get_appearance_data(players, game_data):
     """
 
     print(
-        """ Please enter (y or n) for which player featured in this match
-    Example: 'y' or 'n'"""
+        """\n Please enter (y or n) for which player featured in this match
+        \n Example: 'y' or 'n'\n"""
     )
 
     played_game = []
     for player in players:
         while True:
-            player_app = input(
-                f"""\nDid {Fore.YELLOW}{player}{Style.RESET_ALL}
-                \nplay in the game (y/n):\n"""
-            )
-
+            player_app = input(f" Did {FY}{player}{R} play the match?(y/n):\n")
             if validate_appearance_data(player_app):
-                print("  Data is valid!")
+                print("\n  Data is valid!")
                 break
         if player_app == "y":
             played = player_app.replace("y", "1")
@@ -93,7 +95,7 @@ def get_appearance_data(players, game_data):
         elif player_app == "n":
             played = player_app.replace("n", "0")
             gls.update_cell(game_data, int(players.index(player) + 2), 0)
-        print("  Adding to the tracker ...")
+        print("  Adding to the tracker ...\n")
         app.update_cell(game_data, int(players.index(player) + 2), int(played))
 
     return played_game
@@ -106,14 +108,14 @@ def get_goals_data(players, played_game, game_data):
     """
 
     print(
-        """Please enter the goals scored by each player in this game
+        f"""\nPlease enter the {FG}goals scored by each player{R} in this game
     \nThis must be a number, being 0 if they didn't score
     \nExample: 1 or 2"""
     )
 
     for played in played_game:
         while True:
-            pl_gls = input(f"\nHow many goals did {played} score?:\n")
+            pl_gls = input(f"\nHow many goals did {FY}{played}{R} score?:\n")
 
             if validate_goals_data(pl_gls):
                 print("  Data is valid!")
@@ -127,13 +129,15 @@ def get_conceded_data(game_data):
     """Requests the user provides the number of goals conceded in the game"""
 
     print(
-        """Please enter the goals conceded in the game
-    This must be a number, being 0 if they didn't score
-    Example: 1 or 2"""
+        f"""\n Please enter the {FR}goals conceded{R} in the game
+        ----------------------------------------------------------
+    \n This must be a number, being 0 if they didn't score
+    \n Example: 1 or 2
+        ---------------------------------------------------------"""
     )
 
     while True:
-        conceded_gls = input(f"\nHow many goals did the other team score?:\n")
+        conceded_gls = input(f"\n How many goals did the other team score?:\n")
 
         if validate_goals_data(conceded_gls):
             print("  Data is valid!")
@@ -251,10 +255,7 @@ def calculate_results(game_gls, total_vs):
     Compares goals scored vs goals conceded
     """
     # goals scored less goals conceded, gives a net goal difference (number)
-    net_result = []
-    for scored_gls in game_gls:
-        net_gls = scored_gls - total_vs[game_gls.index(scored_gls)]
-        net_result.append(net_gls)
+    net_result = [score - vs for score, vs in zip(game_gls, total_vs)]
 
     # goal difference number is converted into a result (W/D/L)
     win_draw_loss = []
