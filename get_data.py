@@ -297,8 +297,10 @@ def calculate_full_results(games, game_gls, total_vs):
 
 
 def calculate_form_ranking(players, total_gls, total_app):
-    """FOR MENU5: uses goals/appearance data to calcuate a player "form" metric
-    The highest value is returned, representing the best current player"""
+    """
+    FOR MENU5: uses goals/appearance data to calcuate a player "form" metric
+    The highest value is returned, representing the best current player#
+    """
     form = [gls / app for gls, app in zip(total_gls, total_app)]
     ranking1 = form.index(max(form))
     no1_rank = players[ranking1]

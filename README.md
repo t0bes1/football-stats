@@ -1,5 +1,7 @@
 
 ---
+# "Everett Rovers U9 Yellow" : Football Stats Reporting
+
 ![Top Message](documentation/top-message-eu9y.png)
 
 A Program for recording and reviewing football Statistics for the Everett Rovers U9 Yellow team:
@@ -127,23 +129,23 @@ The below represents all paths tested by all users:
 | feature | action | expected result | tested | passed | comments |
 | --- | --- | --- | --- | --- | --- |
 | Inital program state |Clicking "Run Program" in the browers | Data processed, "Welcome" message shows & Menu appears |Yes |Yes | |
-| Menu 1: Games Summary Report |Data shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
-| Menu 2: Games Full Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
-| Menu 3: Goals Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
-| Menu 4: Top Scorer Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
-| Menu 5: Form Report |Data & messaging shows as expected (in line with base gspread numbers) | | Yes | Yes | - |
-| Menu 7: Quit |Program ends| | Yes | Yes | - |
-| Menu 6: Input data - happy path, no errors in input |Game, Appearance & Goal data processed and refreshed| | Yes | Yes | - |
-| Menu 6: Reports run again (after happy path) |All reports show updated data (per gspread) and messaging remains| | Yes | Yes | - |
-| Menu 6: Input data - game data error - string |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - game data error - number out of range |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - game data error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - appearance error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - appearance error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - goal error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - goal error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - conceded error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
-| Menu 6: Input data - conceded error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 1: Games Summary Report |Click Menu 1| Data shows as expected (in line with base gspread numbers) | Yes | Yes | - |
+| Menu 2: Games Full Report |Click Menu 2|Data & messaging shows as expected (in line with base gspread numbers) | Yes | Yes | - |
+| Menu 3: Goals Report |Click Menu 3| Data & messaging shows as expected (in line with base gspread numbers) | Yes | Yes | - |
+| Menu 4: Top Scorer Report |Click Menu 4| Data & messaging shows as expected (in line with base gspread numbers) | Yes | Yes | - |
+| Menu 5: Form Report |Click Menu 5 | Data & messaging shows as expected (in line with base gspread numbers) | Yes | Yes | - |
+| Menu 7: Quit |Click Menu 7 | Program ends with "goodbye" message| Yes | Yes | - |
+| Menu 6: Input data - happy path, no errors in input |Click Menu 6 | Game, Appearance & Goal data processed and refreshed| Yes | Yes | - |
+| Menu 6: Reports run again (after happy path) |Click Menu 6 |All reports show updated data (per gspread) and messaging remains| Yes | Yes | - |
+| Menu 6: Input data - game data error - string |Insert a random "" into the program |Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - game data error - number out of range |Insert a negative number into the program |Correct invalid message returned, data requested again| | Yes | Yes | - |
+| Menu 6: Input data - game data error - no entry |Click "Enter" without inserting anything into the program| Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - appearance error - incorrect string or number |Insert a negative number into the program| Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - appearance error - no entry |Click "Enter" without inserting anything into the program| Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - goal error - incorrect string or number |Insert a negative number into the program| Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - goal error - no entry |Click "Enter" without inserting anything into the program| Correct invalid message returned, data requested again | Yes | Yes | - |
+| Menu 6: Input data - conceded error - incorrect string or number |Insert a random string "" into the program |Correct invalid message returned, data requested again| Yes | Yes | - |
+| Menu 6: Input data - conceded error - no entry |Insert a negative number into the program |Correct invalid message returned, data requested again| Yes | Yes | - |
 
 ---
 ## Validation
