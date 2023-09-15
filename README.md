@@ -72,19 +72,33 @@ The logic and technical workflow was designed in advance (using Miro), ensuring 
 ---
 ## Technologies Used
 
-- [Pyton](https://www.python.org/) was used to code the technical logic of the project.
-- [Google Sheets](https://docs.google.com/spreadsheets/) was used to store the project data.
-- [Miro](https://miro.com/templates/diagrams/) was used to sketch the technical diagram.
+### Languages:
+
+- [Python 3.8.5](https://www.python.org/downloads/release/python-385/): used to anchor the project and direct all application behaviour
+
+- [JavaScript](https://www.javascript.com/): used to provide the start script needed to run the Code Institute mock terminal in the browser
+
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) used to construct the elements involved in building the mock terminal in the browser
+
+### Frameworks/Libraries, Programmes and Tools:
+#### Python modules/packages:
+
+##### Standard library imports:
+- [time](https://docs.python.org/3/library/time.html) was used to create short delays to aid user experience.
+- [os](https://docs.python.org/3/library/os.html ) was used to clear the terminal before running the program.
+
+##### Third-party imports:
+- [Gspread](https://docs.gspread.org/en/v5.10.0/) was used to access and transfer the project data.
+- [Simple Terminal Menu](https://pypi.org/project/simple-term-menu/) was used to implement the menu.
+- [Colorama](https://pypi.org/project/colorama/) was used to add colors and styles to the project.
+
+#### Other tools:
 - [VSCode](https://code.visualstudio.com/) was used as the main tool to write and edit code.
+- [Google Sheets](https://docs.google.com/spreadsheets/) was used to store the project data.
 - [Git](https://git-scm.com/) was used for the version control of the website.
 - [GitHub](https://github.com/) was used to host the code of the website.
-- [Heroku](https://dashboard.heroku.com/) was used to deploy the project (using also node.js).
-
-The following Python projects were used to add additional functionality:
-- [gspread](https://docs.gspread.org/en/latest/) to access the Google sheets data store via an API
-- [simple term menu](https://pypi.org/project/simple-term-menu/0.4.4/) to allow the main program menu to be created 
-
-The "os" and "time" libraries were also used for adding simple UX features
+- [Miro](https://miro.com/) was used to make a flowchart for the README file.
+- [Heroku](https://dashboard.heroku.com/apps) was used to deploy the project.
 
 ---
 ## Design
@@ -131,33 +145,6 @@ The below represents all paths tested by all users:
 | Menu 6: Input data - conceded error - incorrect string or number |Correct invalid message returned, data requested again| | Yes | Yes | - |
 | Menu 6: Input data - conceded error - no entry |Correct invalid message returned, data requested again| | Yes | Yes | - |
 
-
----
-### Bugs
-+ ##### Solved bugs
-    1.  Inially the input feature would ask for whether, this was because it used the full "players" list to cycle through
-
-    ![Bug1 Issue](documentation/bug1-issue.png)
-    
-    Solutions: A separate "played_game" variable was created when
-    
-    ![Bug1 Solution](documentation/bug1-solution.png)
-    ---
-
-    2.  When inputting the goals for those that played in the match, those that didn't had no date in the gspread. This would cause an error in the get_gls calculation, since a "" string is created in the relevant lists.
-
-    ![Bug2 Issue](documentation/bug2-issue.png)
-    
-    Solutions: a separate gspread update was introduced to insert "0 goals" for all those not playing in the match
-
-    ![Bug2 Solution](documentation/bug2-solution.png)
-    ---
-+ ##### Unsolved bugs
-    - None
-
-+ ##### Mistakes
-    - None
-
 ---
 ## Validation
 
@@ -166,39 +153,142 @@ The code for the program has been run through the "Code Instiute" Python Linter 
 ![CI Linter](documentation/CI-python-linter-eu9y.png)
 
 ---
+### Bugs
++ ##### Solved bugs
+    1.  The input data request ```get_goals_data``` would ask for the goals scored in the match by players that did not play in the game, as it used the full "player" list
+
+     Solution: I created a "played_game" list as part of the ```get_appearance_data``` data function. This was instead called by the ```get_goals_data``` function to ask about whether a player scored in the match
+
+    ```python
+    played_game = []
+    for player in players:
+        while True:
+            player_app = input(f" Did {FY}{player}{R} play the match?(y/n):\n")
+            if validate_appearance_data(player_app):
+                print("\n  Data is valid!")
+                break
+        if player_app == "y":
+            played = player_app.replace("y", "1")
+            played_game.append(player)
+        elif player_app == "n":
+            played = player_app.replace("n", "0")
+            gls.update_cell(game_data, int(players.index(player) + 2), 0)
+        print("  Adding to the tracker ...\n")
+        app.update_cell(game_data, int(players.index(player) + 2), int(played))
+
+    return played_game
+  ```
+    
+    2.  When inputting the goals for those that played in the match, those that didn't had no data. This would cause an error in the ```get_gls``` calculation, since a "" string is created in the relevant lists.
+    
+    Solution: a separate gspread update was introduced in ```get_appearance_data``` to insert "0 goals" for all those not playing in the match
+
+    ```python
+    elif player_app == "n":
+            played = player_app.replace("n", "0")
+            gls.update_cell(game_data, int(players.index(player) + 2), 0)
+    ```
+
+    3.  When inputting goals, values > 5 were being accepted by the ```validate_goals_data``` check. Whilst it is technically possible to score infinite (!) goals in a football match, large goals numbers are more likely to be a user input error.
+
+    Solution: As such, a soft reminder / warning was introduced in ```validate_goals_data``` for users to flag that a high goal number had been received, which prompts them to edit this input in future, if it has indeed been done in error.
+
+    ```python
+    try:
+        if int(data_gls) > 5:
+            print(
+                Back.YELLOW
+                + f"""This number "{data_gls}" is possible but very high
+                \nPlease adjust figures later if an error has been made\n{R}"""
+            )
+            return True
+        elif int(data_gls) < 0:
+            raise ValueError(Back.RED + f"Goals must be a positive number")
+    except ValueError as e:
+        print(Back.RED + f"""\nInvalid data: {e},please try again.\n{R}""")
+        return False
+
+    return True
+  ```
+
++ ##### Unsolved bugs
+    - None
+
++ ##### Mistakes
+    - None
+
+---
 ## Deployment
 
-- The site was deployed to Heroku, and can be accessed [here](https://everett-rovers-u9y-15b7dda34125.herokuapp.com/). 
+- The site was deployed to Heroku, and can be accessed [here](https://everett-rovers-u9y-15b7dda34125.herokuapp.com/).
 
-The steps to deploy are as follows:
-  - In an [Heroku](https://dashboard.heroku.com/apps) account, navigate to the "create app option"
+### To deploy the project as an application that can be **run locally**:
+
+*Note:*
+  1. This project requires you to have Python installed on your local PC:
+  - `sudo apt install python3`
+
+  1. You will also need pip installed to allow the installation of modules the application uses.
+  - `sudo apt install python3-pip`
+
+Create a local copy of the GitHub repository by following one of the two processes below:
+
+- Download ZIP file:
+  1. Go to the [GitHub Repo page](https://github.com/t0bes1/football-stats).
+  1. Click the Code button and download the ZIP file containing the project.
+  1. Extract the ZIP file to a location on your PC.
+
+- Clone the repository:
+  1. Open a folder on your computer with the terminal.
+  1. Run the following command
+  - `git clone https://github.com/t0bes1/football-stats.git`
+
+
+### To deploy the project to Heroku so it can be run as a remote web application:
+
+- Clone the repository:
+  1. Open a folder on your computer with the terminal.
+  1. Run the following command
+  - `gh repo clone t0bes1/football-stats`
+
+  1. Create your own GitHub repository to host the code.
+  1. Run the command `git remote set-url origin <Your GitHub Repo Path>` to set the remote repository location to your repository.
+
+  1. Push the files to your repository with the following command:
+  `git push`
+
+  1. Create a Heroku account if you don't already have one here [Heroku](https://dashboard.heroku.com).
+
+  1. Go to [Heroku](https://dashboard.heroku.com/apps) account, navigate to the "create app option"
 
   ![Heroku deployment](documentation/heroku-deploy-1.png)
 
-  - In the settings tab, update the "config variables" with the following CRED / PORTs. This includes the contents of the creds.json file (not on GiHub).
+  1. In the settings tab, update the "config variables" with the following CRED / PORTs. This includes the contents of the creds.json file (not on GiHub).
 
   ![Heroku deployment](documentation/heroku-deploy-2.png)
 
-  - Then link the GitHub repo (https://github.com/t0bes1/football-stats) and "enable" automatic deploys:
+  1. Then link the GitHub repo (https://github.com/t0bes1/football-stats) and "enable" automatic deploys:
 
   ![Heroku deployment](documentation/heroku-deploy-3.png)
 
-  - From the source section drop-down menu, select the **Main** Branch and click "Deploy Branch":
+  1. From the source section drop-down menu, select the **Main** Branch and click "Deploy Branch":
 
   ![Heroku deployment](documentation/heroku-deploy-4.png)
 
-  - The page will be automatically updated when commits are pushed to the GitHub repo.
+  1. The page will be automatically updated when commits are pushed to the GitHub repo.
 
 ---
 ## Credits
 
 + #### Content
 
-  - All content has been created personally
+  - All content (like player names) are from my son's real team at [Everett Rovers Football Club](https://www.everettroversfc.co.uk/)
+  - Color formatting: [Colorama](https://pypi.org/project/colorama/).
+  - Terminal menu: [Simple Terminal Menu](https://pypi.org/project/simple-term-menu/).
+  - Data storage: [Google Sheets](https://docs.google.com/spreadsheets/u/0/)
 ---
 
 ## Acknowledgments
 
 - [Code Institute](https://codeinstitute.net/) tutors and Slack community members for their support and help.
-
 ---
