@@ -270,9 +270,39 @@ def calculate_results(game_gls, total_vs):
     return win_draw_loss
 
 
-def get_game_list(games):
+def calculate_full_results(games, game_gls, total_vs):
+    """For MENU2: calculates full result history for each game"""
+    # accesses a list of Game names from the gspread
     full_game_list = gls.col_values(1)
     range = games + 1
     game_list = full_game_list[1:range]
 
-    return game_list
+    # a list with goals scored in each match, & converts into a useful string
+    total_for = []
+    for gls in game_gls:
+        game_res = ":   |   " + str(gls) + "    -   "
+        total_for.append(game_res)
+
+    # returns a full game list by combining game name, scored & conceded goals
+    full_res = [
+        str(game) + str(score) + str(concede)
+        for game, score, concede in zip(
+            game_list,
+            total_for,
+            total_vs,
+        )
+    ]
+
+    return full_res
+
+
+def calculate_form_ranking(players, total_gls, total_app):
+    """FOR MENU5: uses goals/appearance data to calcuate a player "form" metric
+    The highest value is returned, representing the best current player"""
+    form = [gls / app for gls, app in zip(total_gls, total_app)]
+    ranking1 = form.index(max(form))
+    no1_rank = players[ranking1]
+    ranking7 = form.index(min(form))
+    no7_rank = players[ranking7]
+
+    return no1_rank, no7_rank

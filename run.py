@@ -7,15 +7,8 @@ from get_data import *
 R = Style.RESET_ALL
 
 
-def games_report_summary(games, game_gls, total_vs):
-    """
-    For MENU 1: creates variables for games summary report
-    Then creates content
-    """
-    win_draw_loss = calculate_results(game_gls, total_vs)
-    wins = win_draw_loss.count("W")
-    losses = win_draw_loss.count("L")
-    draws = win_draw_loss.count("D")
+def games_report_summary(games, wins, draws, losses):
+    """For MENU 1: creates content for games summary report"""
     print(
         Back.BLUE
         + f"""\n GAMES SUMMARY REPORT:{R}
@@ -27,23 +20,8 @@ def games_report_summary(games, game_gls, total_vs):
     )
 
 
-def games_report_full(game_gls, game_list, total_vs):
-    """
-    For MENU 2: creates content for games run down report
-    """
-    total_for = []
-    for gls in game_gls:
-        game_res = ":   |   " + str(gls) + "    -   "
-        total_for.append(game_res)
-
-    full_res = [
-        str(game) + str(score) + str(concede)
-        for game, score, concede in zip(
-            game_list,
-            total_for,
-            total_vs,
-        )
-    ]
+def games_report_full(full_res):
+    """For MENU 2: creates content for games run down report"""
     print(
         Back.BLUE
         + f"""\n FULL RESULTS REPORT:{R}
@@ -52,14 +30,8 @@ def games_report_full(game_gls, game_list, total_vs):
     [print(game) for game in full_res]
 
 
-def goals_report(games, total_gls, total_vs):
-    """
-    For MENU 3: creates content for goals summary report
-    """
-    all_gls = sum(total_gls)
-    all_conceded_gls = sum(total_vs)
-    av_gls = int(all_gls / games)
-    gl_dif = all_gls - all_conceded_gls
+def goals_report(games, all_gls, av_gls, all_conceded_gls, gl_dif):
+    """For MENU 3: creates content for goals summary report"""
     print(
         Back.BLUE
         + f"""\n GOALS REPORT:{R}
@@ -71,11 +43,8 @@ def goals_report(games, total_gls, total_vs):
     )
 
 
-def top_scorer_report(players, total_gls):
-    """
-    For MENU 4: creates content for top scorer report
-    """
-    top_scorer = total_gls.index(max(total_gls))
+def top_scorer_report(players, top_scorer, total_gls):
+    """For MENU 4: creates content for top scorer report"""
     print(
         Back.BLUE
         + f"""\n TOP SCORER REPORT:{R}
@@ -85,17 +54,8 @@ def top_scorer_report(players, total_gls):
     )
 
 
-def form_report(total_gls, total_appear, players):
-    """
-    For MENU 5: creates content for form report
-    uses goals/appearance data to calcuate a player "form" metric
-    The highest value is returned, representing the best current player
-    """
-    form = [a / b for a, b in zip(total_gls, total_appear)]
-    ranking1 = form.index(max(form))
-    no1_rank = players[ranking1]
-    ranking7 = form.index(min(form))
-    no7_rank = players[ranking7]
+def form_report(no1_rank, no7_rank):
+    """For MENU 5: creates content for form report"""
     print(
         Back.BLUE
         + f"""\n FORM REPORT:{R}
@@ -108,7 +68,7 @@ def form_report(total_gls, total_appear, players):
 
 def run_data_input(games, players):
     """
-    For MENU 6: runs all get_data functions for inputted new game
+    For MENU 6: runs all get_data functions for inputted new game info
     Produces content to walk through process step by step
     """
     game_data = get_game_data(games)
@@ -133,10 +93,8 @@ def run_data_input(games, players):
     print(Back.BLUE + f"\n WELCOME BACK. New results have been calculated.{R}")
 
 
-def menu(players, games, game_list, total_app, total_gls, game_gls, total_vs):
-    """
-    Main MENU: used by user to navigate the program
-    """
+def menu(players, games, total_app, total_gls, game_gls, total_vs):
+    """Main MENU: used by user to navigate the program"""
     options = [
         "[1] Games Report : Performance Summary",
         "[2] Games Report : Full Results",
@@ -152,23 +110,35 @@ def menu(players, games, game_list, total_app, total_gls, game_gls, total_vs):
     print(f"\n You have selected: {options[menu_entry_index]}")
 
     if menu_entry_index == 0:
-        games_report_summary(games, game_gls, total_vs)
+        win_draw_loss = calculate_results(game_gls, total_vs)
+        wins = win_draw_loss.count("W")
+        draws = win_draw_loss.count("D")
+        losses = win_draw_loss.count("L")
+        games_report_summary(games, wins, draws, losses)
         main()
 
     elif menu_entry_index == 1:
-        games_report_full(game_gls, game_list, total_vs)
+        full_res = calculate_full_results(games, game_gls, total_vs)
+        games_report_full(full_res)
         main()
 
     elif menu_entry_index == 2:
-        goals_report(games, total_gls, total_vs)
+        all_gls = sum(total_gls)
+        all_conceded_gls = sum(total_vs)
+        av_gls = int(all_gls / games)
+        gl_dif = all_gls - all_conceded_gls
+        goals_report(games, all_gls, av_gls, all_conceded_gls, gl_dif)
         main()
 
     elif menu_entry_index == 3:
-        top_scorer_report(players, total_gls)
+        top_scorer = total_gls.index(max(total_gls))
+        top_scorer_report(players, top_scorer, total_gls)
         main()
 
     elif menu_entry_index == 4:
-        form_report(total_gls, total_app, players)
+        no1_rank = calculate_form_ranking(players, total_gls, total_app)
+        no7_rank = calculate_form_ranking(players, total_gls, total_app)
+        form_report(no1_rank, no7_rank)
         main()
 
     elif menu_entry_index == 5:
@@ -191,12 +161,11 @@ def main():
     """
     players = get_player_list()
     games = get_game_number()
-    game_list = get_game_list(games)
     total_app = calculate_total_app(players, games)
     total_gls = calculate_total_gls(players, games)
     game_gls = calculate_total_game_gls(games)
     total_vs = calculate_total_conceded()
-    menu(players, games, game_list, total_app, total_gls, game_gls, total_vs)
+    menu(players, games, total_app, total_gls, game_gls, total_vs)
 
 
 os.system("clear")
