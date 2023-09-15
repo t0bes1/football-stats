@@ -53,7 +53,7 @@ def get_game_data(games):
     print(
         Back.BLUE
         + f"""\n GAME INPUT: ADD OR EDIT game data here {R}
-    \nYou may add a new game or adjust the figures from previous games
+    \nThis service allows you to add a new game or adjust prior game figures
     ------------------------------------------------------------
     \nNote that the last game data received was for Game {games}
     \nIf you'd like to {FY}enter the next game{R}, please input {games + 1}
@@ -62,11 +62,11 @@ def get_game_data(games):
     )
 
     while True:
-        raw_game_data = input("\nEnter the Game Number here:\n")
-        if validate_game_data(raw_game_data, games):
+        raw_data = input("\nEnter the Game Number here:\n")
+        if validate_game_data(raw_data, games):
             print("  Data is valid!")
             break
-    game_data = int(raw_game_data) + 1
+    game_data = int(raw_data) + 1
 
     return game_data
 
@@ -279,8 +279,8 @@ def calculate_full_results(games, game_gls, total_vs):
 
     # a list with goals scored in each match, & converts into a useful string
     total_for = []
-    for gls in game_gls:
-        game_res = ":   |   " + str(gls) + "    -   "
+    for goals in game_gls:
+        game_res = ":   |   " + str(goals) + "    -   "
         total_for.append(game_res)
 
     # returns a full game list by combining game name, scored & conceded goals

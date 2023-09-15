@@ -25,9 +25,11 @@ def games_report_full(full_res):
     print(
         Back.BLUE
         + f"""\n FULL RESULTS REPORT:{R}
-    \n{Fore.GREEN} Everett Rovers U9Y v Opponents\n {R}"""
+    \n{Fore.GREEN} Everett Rovers U9Y v Opponents {R}
+    \n---------------------------"""
     )
     [print(game) for game in full_res]
+    print("---------------------------")
 
 
 def goals_report(games, all_gls, av_gls, all_conceded_gls, gl_dif):
@@ -136,8 +138,9 @@ def menu(players, games, total_app, total_gls, game_gls, total_vs):
         main()
 
     elif menu_entry_index == 4:
-        no1_rank = calculate_form_ranking(players, total_gls, total_app)
-        no7_rank = calculate_form_ranking(players, total_gls, total_app)
+        ranking = calculate_form_ranking(players, total_gls, total_app)
+        no1_rank = ranking[0]
+        no7_rank = ranking[1]
         form_report(no1_rank, no7_rank)
         main()
 
@@ -149,7 +152,7 @@ def menu(players, games, total_app, total_gls, game_gls, total_vs):
         os.system("clear")
         print(
             f"""\nThanks for using Everett Rovers stats reporting.
-              Goodbye.:)\n"""
+              Goodbye :)\n"""
         )
         quit()
 
